@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+/* Fonts include */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+/* Bootstrap core CSS*/
+@import url("bootstrap.css");
+@import url("bootstrap-material-datetimepicker.css");
+
+/*Defaults CSS SETTINGS */
+@import url("global.css");
+@import url("style.css");
+/*@import url("color.css");*/

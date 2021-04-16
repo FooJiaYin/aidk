@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120px" height="120px" viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>img_profile</title>
+    <defs>
+        <circle id="path-1" cx="60" cy="60" r="60"></circle>
+    </defs>
+    <g id="切圖" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-21.000000, -104.000000)">
+            <g id="img_profile" transform="translate(21.000000, 104.000000)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <use id="Mask" fill="#BCEBBE" xlink:href="#path-1"></use>
+                <g id="user" mask="url(#mask-2)">
+                    <g transform="translate(22.778542, 23.108666)" id="Group">
+                        <g>
+                            <path d="M37.1389271,0 C24.8584869,0 14.8555708,10.002586 14.8555708,22.2833563 C14.8555708,34.5637964 24.8584869,44.5667125 37.1389271,44.5667125 C49.4193673,44.5667125 59.4222834,34.5637964 59.4222834,22.2833563 C59.4222834,10.002586 49.4193673,0 37.1389271,0 Z" id="Path" fill="#F7B62D" fill-rule="nonzero"></path>
+                            <path d="M73.8815406,65.7935076 C67.1966988,55.7909216 56.0550206,49.8486933 44.0220083,49.8486933 L30.2558459,49.8486933 C18.2228336,49.8486933 7.08115543,55.7909216 0.396313618,65.7935076 L0,66.437249 L0,97.7166437 L74.2778542,97.7166437 L74.2778542,66.437249 L73.8815406,65.7935076 Z" id="Path" fill="#F7B62D" fill-rule="nonzero"></path>
+                        </g>
+                        <g transform="translate(37.138927, 0.000000)">
+                            <path d="M0,44.5667125 L0,0 C12.2804402,0 22.2833563,10.002586 22.2833563,22.2833563 C22.2833563,34.5637964 12.2804402,44.5667125 0,44.5667125 Z" id="Path" fill="#DD9F1E" fill-rule="nonzero"></path>
+                            <path d="M37.1389271,66.437249 L37.1389271,98.2118294 L0,98.2118294 L0,49.8486933 L6.88308116,49.8486933 C18.9160935,49.8486933 30.0577717,55.7909216 36.7426135,65.7935076 L37.1389271,66.437249 Z" id="Path" fill="#DD9F1E" fill-rule="nonzero"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
