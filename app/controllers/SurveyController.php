@@ -265,7 +265,7 @@ class SurveyController extends Controller
             $account = $_POST['email'];
             if ($student && auth::doLogin($student, $_POST['password'])) {
                 (new LogModel)->writeLog("學生帳號註冊(帳號: $account)");
-                header("Location: /student/myScore/");
+                header("Location: /student/profile/");
             } else {
                 (new LogModel)->writeLog("學生帳號註冊失敗(帳號: $account, 異常操作)");
                 //print_r($user);
@@ -341,7 +341,10 @@ class SurveyController extends Controller
             ) {
                 (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($user);
                 (new LogModel)->writeLog("學生登入(重新測驗)(帳號: $account)");
-                header("Location: /student/myScore/");
+                if ($user['score'] == "[0, 0, 0, 0, 0, 0]") 
+                    header("Location: /student/profile/");
+                else 
+                    header("Location: /student/myScore/");
             } else {
                 (new LogModel)->writeLog("學生登入失敗(重新測驗)(帳號: $account)");
                 if ($_POST['loginBy'] == "web")

@@ -9,7 +9,7 @@
                 <?php endforeach ?>
                 <?php if(is_file("course_data/".$course['id']."/intro.mp4")): ?>
                 <div>
-                    <video style="width:830px; max-width:100%;" controls controlsList="nodownload">
+                    <video style="width:830px; max-width:100%;" controls  disablepictureinpicture  controlsList="nodownload">
                         <source src="/course_data/<?= $course['id'] ?>/intro.mp4" type="video/mp4">
                         此瀏覽器不支援本網站的影片播放，請改用她款瀏覽器。
                     </video>

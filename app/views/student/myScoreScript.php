@@ -1,5 +1,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 <script type="text/javascript">
+    <?php if ($user['score'] == "[0, 0, 0, 0, 0, 0]") : ?>
+        alert('提醒：您尚未完成測驗');
+    <?php endif ?>
     (function() {
         var colors = {
             secondary: "#333",

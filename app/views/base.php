@@ -1,3 +1,4 @@
+<?php use app\models\StudentModel; ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,85 +53,96 @@
     </div>
     <!--//==Preloader End==//-->
 
+    <header class="header">
+        <div class="logo logo-nologin">
+            <a href="/"><img src="/static/images/logo.png" alt="AIDK" /></a>
+            <?php if (!isset($_SESSION['loginType']) || $_SESSION['loginType'] == 1) : ?>
+                <div class="classNavBtn">
+                    <a href="#!" class="btnJL">課程總覽</a>
 
-    <?php if ($this->_controller == 'survey' && !isset($_GET['nologin'])) : ?>
-        <header class="header">
-            <div class="logo">
-                <a href="/survey/"><img src="/static/images/img_logo.svg" alt="AIDK" />學習歷程AI導航者</a>
-            </div>
-        </header>
-    <?php else : ?>
-        <header class="header">
-            <div class="logo logo-nologin">
-                <a href="/"><img src="/static/images/logo.png" alt="AIDK" /></a>
-                <?php if (!isset($_SESSION['loginType']) || $_SESSION['loginType'] == 1) : ?>
-                    <div class="classNavBtn">
-                        <a href="#!" class="btnJL">課程總覽</a>
-
-                        <div class="classDropNav">
-                            <div class="classDropHr">
-                                <div class="container-xl">
-                                    <ul class="row no-gutters">
-                                        <?php foreach (COURSE_CATEGORY as $key => $name) : ?>
+                    <div class="classDropNav">
+                        <div class="classDropHr">
+                            <div class="container-xl">
+                                <h2>普通大學</h2>
+                                <ul class="row no-gutters">
+                                    <?php foreach (COURSE_CATEGORY as $key => $name) : ?>
+                                        <?php if ($key < 19 && $key > 0) : ?>
                                             <li class="col-3 col-md-2"><a href="/course/category/<?= $key ?>/"><?= $name ?></a></li>
-                                        <?php endforeach ?>
-                                    </ul>
-                                </div>
+                                        <?php endif ?>
+                                    <?php endforeach ?>
+                                </ul>
+                                <h2>科技大學</h2>
+                                <ul class="row no-gutters">
+                                    <?php foreach (COURSE_CATEGORY as $key => $name) : ?>
+                                        <?php if ($key >= 19) : ?>
+                                            <li class="col-3 col-md-2"><a href="/course/category/<?= $key ?>/"><?= $name ?></a></li>
+                                        <?php endif ?>
+                                    <?php endforeach ?>
+                                </ul>
+                                <h2 id="category-0"><a href="/course/category/0/">其他技能</a></h2>
+                                </ul>
                             </div>
                         </div>
-
                     </div>
 
-                    <div class="searchBox">
-                        <form action="/course/index/search/" method="GET" style="width:100%">
-                            <input type="text" class="form-control" name="keyword" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" placeholder="搜尋">
-                        </form>
-                    </div>
-                <?php endif ?>
+                </div>
 
-                <ul class="userNav">
-                    <?php if (isset($_SESSION['isLogin']) && $_SESSION['isLogin']) : ?>
-                        <?php if ($_SESSION['loginType'] == 1) : ?>
-                            <li>
-                                <a href="#!"><img src="/static/images/img_profile.svg"></a>
-                                <ul class="dropmenu">
-                                    <li><a href="/student/profile/">個人檔案</a></li>
-                                    <li><a href="/student/myCourses/">我的課程</a></li>
-                                    <li><a href="/student/record/">消費紀錄</a></li>
-                                    <li><a href="/student/myScore/">我的測驗</a></li>
-                                    <li><a href="/student/logout/">登出</a></li>
-                                </ul>
-                            </li>
-                        <?php elseif ($_SESSION['loginType'] == 2) : ?>
-                            <li>
-                                <a href="#!"><img src="/static/images/img_profile.svg"></a>
-                                <ul class="dropmenu">
-                                    <li><a href="/teacher/courseList/"><?= $_SESSION['name'] ?> 老師</a></li>
-                                    <li><a href="/teacher/logout">登出</a></li>
-                                </ul>
-                            </li>
-                        <?php elseif ($_SESSION['loginType'] == 3) : ?>
-                            <li>
-                                <a href="#!"><img src="/static/images/img_profile.svg"></a>
-                                <ul class="dropmenu">
-                                    <li><a href="/admin/dashboard">管理員</a></li>
-                                    <li><a href="/admin/logout">登出</a></li>
-                                </ul>
-                            </li>
-                        <?php endif ?>
-                    <?php else : ?>
+                <div class="searchBox">
+                    <form action="/course/index/search/" method="GET" style="width:100%">
+                        <input type="text" class="form-control" name="keyword" value="<?= (isset($_GET['keyword'])) ? $_GET['keyword'] : '' ?>" placeholder="搜尋">
+                    </form>
+                </div>
+            <?php endif ?>
+
+            <ul class="userNav">
+                <?php if (isset($_SESSION['isLogin']) && $_SESSION['isLogin']) : ?>
+                    <?php if ($_SESSION['loginType'] == 1) : ?>
                         <li>
-                            <a href="/survey/signup/?nologin">註冊</a>
+                            <a href="#!"><img src="/static/images/img_profile.svg"></a>
+                            <ul class="dropmenu">
+                                <li><a href="/student/profile/">個人檔案</a></li>
+                                <li><a href="/student/myCourses/">我的課程</a></li>
+                                <li><a href="/student/record/">消費紀錄</a></li>
+                                <li><a href="/student/myScore/">我的測驗</a></li>
+                                <li><a href="/student/logout/">登出</a></li>
+                            </ul>
                         </li>
+                        <?php $user = (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->fetch(); ?>
+                        <li><?= $user['credit'] ?></li>
+                    <?php elseif ($_SESSION['loginType'] == 2) : ?>
                         <li>
-                            <a href="/student/login/">登入</a>
+                            <a href="#!"><img src="/static/images/img_profile.svg"></a>
+                            <ul class="dropmenu">
+                                <li><a href="/teacher/courseList/"><?= $_SESSION['name'] ?> 老師</a></li>
+                                <li><a href="/teacher/logout">登出</a></li>
+                            </ul>
+                        </li>
+                    <?php elseif ($_SESSION['loginType'] == 3) : ?>
+                        <li>
+                            <a href="#!"><img src="/static/images/img_profile.svg"></a>
+                            <ul class="dropmenu">
+                                <li><a href="/admin/dashboard">管理員</a></li>
+                                <li><a href="/admin/logout">登出</a></li>
+                            </ul>
                         </li>
                     <?php endif ?>
-                </ul>
+                <?php else : ?>
+                    <li>
+                        <a href="/survey/signup/?nologin">註冊</a>
+                    </li>
+                    
+                    <li class="dropdown">
+                        <a href="#!">登入</a>
+                        <ul class="dropmenu">
+                            <li><a class="dropdown-item" href="/student/login/">學生登入</a></li>
+                            <li><a class="dropdown-item" href="/teacher/login/">教師登入</a></li>
+                        </ul>
+                    </li>
+                <?php endif ?>
+            </ul>
 
-            </div>
-        </header>
-    <?php endif ?>
+        </div>
+    </header>
 
     <?php if (isset($_SESSION['loginType']) && $_SESSION['loginType'] == 3 && $this->_controller != 'course') : ?>
         <div class="row no-gutters">

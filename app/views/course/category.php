@@ -1,5 +1,9 @@
 <div class="container-md">
-
+    <?php if ($category) : ?>
+        <div class="titleJL">
+            <h1><?= COURSE_CATEGORY[$category] ?></h1>
+        </div>
+    <?php endif ?>
     <div class="row">
         <?php if ($courses) : ?>
             <?php foreach ($courses as $course) : ?>

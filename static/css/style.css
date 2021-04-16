@@ -158,6 +158,12 @@ btn
   border: 1px solid #777;
   z-index: 999;
 }
+.classDropNav h2{
+  padding-bottom: 1rem;
+}
+.classDropNav h2#category-0:hover{
+  color: #64B067;
+}
 .classDropNav ul{
   padding: 0;
 }

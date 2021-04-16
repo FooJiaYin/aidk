@@ -28,7 +28,8 @@ class CourseController extends Controller
             $courses = (new CourseModel)->fetchAll();
         }
 
-        $this->assign('courses', $courses);
+        $this->assign('courses', $courses);        
+        $this->assign('category', null);
         $this->render();
     }
 
@@ -110,6 +111,7 @@ class CourseController extends Controller
         $courses = (new CourseModel)->where(['category = :category'], [':category' => $category])->fetchAll();
 
         $this->assign('courses', $courses);
+        $this->assign('category', $category);        
         $this->render();
     }
 
