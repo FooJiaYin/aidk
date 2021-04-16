@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="87px" height="34px" viewBox="0 0 87 34" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>img_logo</title>
+    <g id="Mockups---問卷" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Mockup_1" transform="translate(-33.000000, -23.000000)">
+            <g id="img_logo" transform="translate(33.319607, 23.648563)">
+                <path d="M15.1148648,0 L29.4553347,32.3177624 L24.7315263,32.3177624 L21.3024682,25.1398149 L8.4550693,25.1398149 L4.80282186,32.3177624 L1.77635684e-15,32.3177624 L15.1148648,0 Z M14.7276673,10.1884815 L10.148816,20.4731894 L19.4596604,20.4731894 L14.7276673,10.1884815 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+                <rect id="Rectangle" fill="#F7B62D" x="31.6803927" y="11.3514365" width="5" height="21"></rect>
+                <rect id="Rectangle-Copy-2" fill="#FFFFFF" x="61.6803927" y="1.35143654" width="5" height="31"></rect>
+                <polygon id="Rectangle-Copy-3" fill="#FFFFFF" points="78.7755442 1.35143654 84.6803927 1.35143654 66.6803927 19.3191548 61.6803927 19.3191548 66.7910756 12.8562943"></polygon>
+                <polygon id="Rectangle-Copy-4" fill="#FFFFFF" points="79.6803927 32.3514365 85.6803927 32.3514365 69.893563 13.3040545 66.1679985 16.5328707"></polygon>
+                <rect id="Rectangle-Copy" fill="#FFFFFF" x="31.6803927" y="1.35143654" width="5" height="5"></rect>
+                <path d="M40.0769477,1.35143654 C49.0127494,1.35143654 58.8284895,4.00627593 58.8284895,17.6443546 C58.8284895,31.2824332 46.328671,32.6652282 40.0769477,32.3514365 L40.0769477,28.2176448 C44.7066624,28.2176448 54.7981392,26.8529904 54.3230982,17.6443546 C53.8480572,8.43571876 48.1797345,5.79904774 40.0769477,5.79904774 L40.0769477,1.35143654 Z" id="Path-4" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>
