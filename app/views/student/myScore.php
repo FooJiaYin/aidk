@@ -55,8 +55,12 @@
                         財經學群 E C
                         遊憩運動學群 E S
                     -->
-                    <h3 class="px-5">你的興趣類型為：IEC</h3>
-                    <h3 class="px-5">適合的學群含：工程學群、資訊學群、數理化學群、生命科學學群</h3>
+                    <h3 class="px-5">你的興趣類型為：<?= $interestType[0]['name'][0] ?><?= $interestType[1]['name'][0] ?><?= $interestType[2]['name'][0] ?></h3>
+                    <h3 class="px-5">適合的學群含：
+                        <?php foreach ($recCategories as $category) : ?>
+                            <?= COURSE_CATEGORY[$category] ?>
+                        <?php endforeach ?>
+                    </h3>
                 </div>
                 <div class="tab2Box">
                     <div id="score_top1" class="progressBox">
@@ -117,7 +121,7 @@
             <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
 
                 <div class="row">
-                    <?php foreach ($randomCourse as $c) : ?>
+                    <?php foreach ($courses as $c) : ?>
                         <div class="col-6 col-xs-6 col-md-4 mb-4">
                             <a href="/course/view/<?= $c['id'] ?>/">
                                 <div class="card h-100 border-dark rounded-0">
@@ -128,7 +132,9 @@
                                     <img src="/course_data/<?= $c['id'] ?>/img/<?= $imgs[2] ?>" class="card-img-top" alt="圖">
                                     <div class="card-body">
                                         <h6 class="mb-1">
-                                            <div class="card textC rounded-pill border-dark inBlock pl-1 pr-1"><?= COURSE_CATEGORY[$c['category']] ?></div>
+                                            <?php foreach ($c['category'] as $category) : ?>
+                                                <div class="card textC rounded-pill border-dark inBlock pl-1 pr-1"><?= COURSE_CATEGORY[$category] ?></div>
+                                            <?php endforeach ?>
                                             <!--<div class="card textC rounded-pill border-dark inBlock pl-1 pr-1">XX學系</div>-->
                                         </h6>
                                         <h4 class="card-title"><?= $c['name'] ?></h4>

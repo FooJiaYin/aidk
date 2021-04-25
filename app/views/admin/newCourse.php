@@ -29,12 +29,15 @@
             </div>
             <div class="form-group">
                 <label>所屬學群</label>
-                <select class="form-control" name="category" required="">
-                    <option value="">請選擇</option>
+                <div class="checkboxStyle1JL">
                     <?php foreach (COURSE_CATEGORY as $key => $name) : ?>
-                        <option value="<?= $key ?>"><?= $name ?></option>
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="category[]" value="<?= $key ?>"><?= $name ?>
+                            </label>
+                        </div>
                     <?php endforeach ?>
-                </select>
+                </div>
             </div>
             <div id="img">
                 <label>課程簡介圖片</label>

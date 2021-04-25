@@ -20,6 +20,14 @@ class CourseController extends Controller
         parent::__construct($controller, $action);
     }
 
+    function assignCourses($courses) {
+        foreach ($courses as $k => $c) {
+            $categoryList = json_decode($c['category'], true);
+            $courses[$k]['category'] = $categoryList;
+        }
+        $this->assign('courses', $courses);  
+    }
+
     public function index($search = null)
     {
         if ($search == 'search' && isset($_GET['keyword']) && $_GET['keyword'] != '') {
@@ -27,8 +35,7 @@ class CourseController extends Controller
         } else {
             $courses = (new CourseModel)->fetchAll();
         }
-
-        $this->assign('courses', $courses);        
+        $this->assignCourses($courses);       
         $this->assign('category', null);
         $this->render();
     }
@@ -54,7 +61,8 @@ class CourseController extends Controller
             $isBought = false;
         }
 
-        $this->assign('course', $course);
+        // $this->assignCourses($course);  
+        $this->assign('course', $course); 
         $this->assign('imgs', $imgs);
         $this->assign('isBought', $isBought);
         $this->render();
@@ -97,7 +105,7 @@ class CourseController extends Controller
 
         $comments = (new CommentModel)->where(['course = :course'], [':course' => $id])->fetchAll();
 
-        $this->assign('course', $course);
+        $this->assignCourses($courses);  
         $this->assign('chapter', $chapter);
         $this->assign('section', $section);
         $this->assign('video', $video);
@@ -108,9 +116,8 @@ class CourseController extends Controller
 
     public function category($category = 0)
     {
-        $courses = (new CourseModel)->where(['category = :category'], [':category' => $category])->fetchAll();
-
-        $this->assign('courses', $courses);
+        $courses = (new CourseModel)->getCategoryCourses($category);
+        $this->assignCourses($courses);
         $this->assign('category', $category);        
         $this->render();
     }
@@ -280,5 +287,26 @@ class CourseController extends Controller
         (new LogModel)->writeLog("課程證書下載(課程ID: $courseID, 異常操作)");
         header("Location: /");
         exit();
+    }
+
+    public function twstudy($courseID)
+    {               
+        $url = "http://pc.twstudy.com/aidk/act/login_pb.html";
+        $ch = curl_init();
+        $cookie = "";
+        curl_setopt($ch, CURLOPT_COOKIEFILE, "cookie.txt");
+        curl_setopt($ch, CURLOPT_COOKIEJAR,  "cookie.txt");
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1); 
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "USER_ID=0901334131&PASSWD=334131");         
+        curl_exec($ch);
+        $url = "http://pc.twstudy.com/aidk/course.html?CP=";
+        $url .= strval($courseID);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $html = curl_exec($ch);
+        $this->assign('cookie', $cookie);
+        $this->assign('html', $html);
+        $this->assign('url', $url);
+        $this->render();
     }
 }

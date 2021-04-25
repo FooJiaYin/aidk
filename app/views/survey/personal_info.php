@@ -14,32 +14,37 @@
                 <input type="email" class="form-control" name="email" placeholder="輸入你的聯絡E-mail" required>
             </div>
             <div class="form-group">
-                <label for="">學校區域</label>
-                <select class="form-control" id="" required>
-                    <option value="">選擇學校區域</option>
-                    <option>北部地區</option>
-                    <option>中部地區</option>
-                    <option>南部地區</option>
-                    <option>東部地區</option>
+                <label for="">學校縣市</label>
+                <select class="form-control" id="city" onchange="filter('school', 'city', 'type')" required>
+                    <option value="">選擇學校縣市</option>
+                    <option value="taipei">台北</option>
+                    <option value="taoyuan">桃園</option>
+                    <option>新竹</option>
+                    <option value="taichung">台中</option>
+                    <option value="tainan">台南</option>
                     <option>外島地區</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="">學校立別</label>
-                <select class="form-control" id="" required>
+                <select class="form-control" id="type" onchange="filter('school', 'city', 'type')" required>
                     <option value="">選擇學校立別</option>
-                    <option>公立</option>
-                    <option>私立</option>
+                    <option value="public">公立</option>
+                    <option value="private">私立</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="">學校名稱</label>
-                <select class="form-control" name="school" required>
+                <select class="form-control" id="school" name="school" required>
                     <option value="">選擇學校名稱</option>
-                    <option>建國中學</option>
-                    <option>北一女中</option>
-                    <option>師大附中</option>
-                    <option>中山女高</option>
+                    <option city="taipei" type="public">建國中學</option>
+                    <option city="taipei" type="public">北一女中</option>
+                    <option city="taipei" type="public">師大附中</option>
+                    <option city="taipei" type="public">中山女高</option>
+                    <option city="taoyuan" type="public">中山女高</option>
+                    <option city="taichung" type="public">台中一中</option>
+                    <option city="taichung" type="private">明道中學</option>
+                    <option city="tainan" type="public">台南一中</option>
                 </select>
             </div>
             <div class="form-group">

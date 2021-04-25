@@ -17,7 +17,19 @@
                             <img src="/course_data/<?= $course['id'] ?>/img/<?= $imgs[2] ?>" class="card-img-top" alt="圖">
                             <div class="card-body">
                                 <h5 class="mb-1">
-                                    <div class="card textC rounded-pill border-dark inBlock pl-4 pr-4"><?= COURSE_CATEGORY[$course['category']] ?></div>
+                                    <?php foreach ($course['category'] as $category) : ?>
+                                        <div class="card-body text-right">
+                                            <h5 class="mb-1">
+                                                <div class="card textC rounded-pill border-dark course_sort">
+                                                    <a href="/course/category/<?= $category ?>/">
+                                                        <?= COURSE_CATEGORY[$category] ?>
+                                                    </a>
+                                                </div>
+                                            </h5>
+                                            <!--<h5>$<?= $course['price'] ?></h5>-->
+                                        </div>
+                                    <?php endforeach ?>
+                                    <!-- <div class="card textC rounded-pill border-dark inBlock pl-4 pr-4"><?= COURSE_CATEGORY[$course['category']] ?></div> -->
                                 </h5>
                                 <h5 class="card-title"><?= $course['name'] ?></h5>
                             </div>

@@ -18,12 +18,18 @@
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="card-body text-right">
-                                    <h5 class="mb-1">
-                                        <div class="card textC rounded-pill border-dark course_sort"><a href="/course/category/<?= $course['category'] ?>/"><?= COURSE_CATEGORY[$course['category']] ?></a></div>
-                                    </h5>
-                                    <!--<h5>$<?= $course['price'] ?></h5>-->
-                                </div>
+                                <?php foreach ($course['category'] as $category) : ?>
+                                    <div class="card-body text-right">
+                                        <h5 class="mb-1">
+                                            <div class="card textC rounded-pill border-dark course_sort">
+                                                <a href="/course/category/<?= $category ?>/">
+                                                    <?= COURSE_CATEGORY[$category] ?>
+                                                </a>
+                                            </div>
+                                        </h5>
+                                        <!--<h5>$<?= $course['price'] ?></h5>-->
+                                    </div>
+                                <?php endforeach ?>
                             </div>
                         </div>
                     </div>

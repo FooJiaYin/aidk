@@ -1197,13 +1197,13 @@ flex布局
 .check_style a:hover{ 
   color:#408D43;
 }
-input[type="checkbox"] {
+/* input[type="checkbox"] {
   position: absolute;
   opacity: 0;
   cursor: pointer;
   height: 0;
   width: 0;
-}
+} */
 .check_checkmark {
   position: absolute;
   top: 4px;

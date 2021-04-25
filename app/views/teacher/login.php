@@ -5,7 +5,7 @@
         <div class="boxBor loginBox">
 
             <div class="titleJL">
-                <h1>登入</h1>
+                <h1>教師登入</h1>
             </div>
 
             <div class="row">

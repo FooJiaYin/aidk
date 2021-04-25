@@ -20,6 +20,23 @@ class CourseModel extends Model
         return $sth->fetchAll();
     }
 
+    public function getCategoryCourses($category)
+    {
+        $sql = "SELECT * FROM `course` WHERE 
+            `category` LIKE :category1 OR 
+            `category` LIKE :category2 OR 
+            `category` LIKE :category3 OR 
+            `category` LIKE :category4";
+        $sth = Db::pdo()->prepare($sql);
+        $sth = $this->formatParam($sth, [':category1' => "[$category]"]);
+        $sth = $this->formatParam($sth, [':category2' => "[$category, %"]);
+        $sth = $this->formatParam($sth, [':category3' => "%, $category]"]);
+        $sth = $this->formatParam($sth, [':category4' => "%, $category, %"]);
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
     public function getRandomCourse()
     {
         $sql = "SELECT t1.id as id, t1.name, t1.category, t1.description

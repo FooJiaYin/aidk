@@ -28,13 +28,26 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>所屬學程</label>
-                <select class="form-control" name="category" required="">
+                <label>所屬學群</label>
+                <div class="checkboxStyle1JL">
+                    <?php foreach (COURSE_CATEGORY as $key => $name) : ?>
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <?php if (in_array($key, $course['category'])): ?>
+                                    <input type="checkbox" class="form-check-input" name="category[]" value="<?= $key ?>" checked><?= $name ?>
+                                <?php else: ?>
+                                    <input type="checkbox" class="form-check-input" name="category[]" value="<?= $key ?>"><?= $name ?>
+                                <?php endif ?>
+                            </label>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+                <!-- <select class="form-control" name="category" required="">
                     <option value="">請選擇</option>
                     <?php foreach (COURSE_CATEGORY as $key => $name) : ?>
                         <option value="<?= $key ?>" <?= ($course['category'] == $key ? 'selected=""' : '') ?>><?= $name ?></option>
                     <?php endforeach ?>
-                </select>
+                </select> -->
             </div>
             <button type="submit" class="btn btn-lg btn-primary">確認修改</button>
         </form>

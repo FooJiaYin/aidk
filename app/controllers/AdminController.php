@@ -94,7 +94,14 @@ class AdminController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 處理表單資料
             $courseSetting = json_decode($_POST['course'], true);
-
+            // $categoryList = $courseSetting['category'];
+            // $categoryStr = "[";
+            // $N = count($categoryList);
+            // foreach($categoryList as $i => $c) {
+            //     $categoryStr .= (string) $c;
+            //     if($i < $N-1) $categoryStr .= ", ";
+            // }
+            // $categoryStr .= "]";
             $course = [
                 'name' => $courseSetting['name'],
                 'category' => $courseSetting['category'],
@@ -186,12 +193,21 @@ class AdminController extends Controller
 
         if ($id) {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                // $categoryList = $_POST['category'];
+                // $categoryStr = "[";
+                // $N = count($categoryList);
+                // foreach($categoryList as $i => $c) {
+                //     $categoryStr .= (string) $c;
+                //     if($i < $N-1) $categoryStr .= ", ";
+                // }
+                // $categoryStr .= "]";
+                $categoryStr = json_encode($_POST['category']);
                 $course = [
                     'name' => $_POST['name'],
                     'description' => $_POST['description'],
                     'price' => $_POST['price'],
                     'teacher' => $_POST['teacher'],
-                    'category' => $_POST['category']
+                    'category' => $categoryStr
                 ];
                 (new CourseModel)->where(['id = :id'], [':id' => $id])->update($course);
                 (new LogModel)->writeLog("修改課程資料(課程ID: $id)");
@@ -199,6 +215,7 @@ class AdminController extends Controller
             } else {
                 $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
                 $teachers = (new TeacherModel)->fetchAll();
+                $course['category'] = json_decode($course['category'], true);
                 $this->assign('course', $course);
                 $this->assign('teachers', $teachers);
                 $this->render();

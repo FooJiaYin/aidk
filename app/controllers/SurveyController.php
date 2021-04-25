@@ -6,6 +6,7 @@ use libraries\base\Controller;
 use libraries\base\Authorization as auth;
 
 use app\models\StudentModel;
+use app\models\SurveyModel;
 use app\models\LogModel;
 
 class SurveyController extends Controller
@@ -28,23 +29,24 @@ class SurveyController extends Controller
     public function personal_info()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $_SESSION['question_step'] = 1;
+            $_SESSION['question_step'] = 0;
             $_SESSION['surv_email'] = $_POST['email'];
             $_SESSION['surv_school'] = $_POST['school'];
             $_SESSION['surv_grade'] = $_POST['grade'];
-            header("Location: /survey/question/q1/");
+            header("Location: /survey/question/0/");
             exit();
         } else if ((isset($_SESSION['isLogin']) && is_bool($_SESSION['isLogin']) && $_SESSION['isLogin'])) {
-            $_SESSION['question_step'] = 1;
-            header("Location: /survey/question/q1/");
+            $_SESSION['question_step'] = 0;
+            header("Location: /survey/question/0/");
             exit();
         } else {
             $this->render();
         }
     }
 
-    public function question($q = 'q1')
+    /*public function question($q = 'q1')
     {
+        auth::checkAuth();
         if (isset($_GET['set_q'])) {
             $_SESSION['question_step'] = $_GET['set_q'];
         }
@@ -220,13 +222,144 @@ class SurveyController extends Controller
                 exit();
             }
         } else {
-            $question_step = $_SESSION['question_step'];
-            if ($q == 'q' . $question_step)
-                $this->render($q);
-            else
-                header("Location: /survey/question/q$question_step/");
+            $this->render($q);
+            // $question_step = $_SESSION['question_step'];
+            // if ($q == 'q' . $question_step)
+            //     $this->render($q);
+            // else
+            //     header("Location: /survey/question/q$question_step/");
+            // exit();
+        }
+    }*/
+
+    public function question($step = 1)
+    {
+        // if(!isset($_SESSION['isLogin']) || !is_bool($_SESSION['isLogin']) || !$_SESSION['isLogin']) {
+        //     header("Location: /survey/personal_info/");
+        // }
+        if(!isset($_SESSION['question_order']) || $step == '0') {
+            $order = range(1, 48);
+            shuffle($order);
+            $_SESSION['question_order'] = $order;
+        }
+        if (!isset($_SESSION['question_step']) || $step == '0') {
+            $_SESSION['question_step'] = 1;
+            header("Location: /survey/question/");
             exit();
         }
+        $qid = $_SESSION['question_order'][$step-1];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            print_r($_POST);
+            $_SESSION['surv_ans'][$qid] = intval($_POST[$qid]);
+            if ($step < 48) {
+                $step += 1;
+                $_SESSION['question_step'] = $step;
+                header("Location: /survey/question/$step/");
+                exit();
+            }
+            else {
+                $score = [0, 0, 0, 0, 0, 0];
+                for ($i = 1; $i <= 8; $i++) {
+                    $score[1] += $_SESSION['surv_ans'][$i];
+                }
+                for ($i = 9; $i <= 16; $i++) {
+                    $score[5] += $_SESSION['surv_ans'][$i];
+                }
+                for ($i = 17; $i <=24; $i++) {
+                    $score[3] += $_SESSION['surv_ans'][$i];
+                }
+                for ($i = 25; $i <= 32; $i++) {
+                    $score[4] += $_SESSION['surv_ans'][$i];
+                }
+                for ($i = 33; $i <= 40; $i++) {
+                    $score[2] += $_SESSION['surv_ans'][$i];
+                }
+                for ($i = 41; $i <= 48; $i++) {
+                    $score[0] += $_SESSION['surv_ans'][$i];
+                }
+                $weight_male = [
+                    [0, 6, 0, 0, 2.5, 1.5],
+                    [0, 6, 0, 0, 4, 0],
+                    [0, 5.5, 0, 0, 3.5, 1],
+                    [0, 2, 0, 0, 2, 6],
+                    [0, 2, 0, 2, 0, 6],
+                    [2, 0, 0, 6, 0, 2],
+                    [1.5, 0, 0, 3, 0, 5.5],
+                    [2, 0, 0, 3, 0, 5],
+                    [2, 0, 0, 4, 0, 4],
+                    [1.5, 0, 0, 4.5, 0, 4],
+                    [5, 0, 0, 3, 0, 2],
+                    [6, 0, 0, 4, 0, 0],
+                    [6.5, 0, 0, 2, 0, 0],
+                    [0, 0, 0, 4.5, 1.5, 4],
+                    [0, 4, 0, 0, 6, 0],
+                    [0, 5, 0, 0, 5, 0],
+                    [0, 6, 0, 0.5, 3.5, 0],
+                    [0, 5, 0, 2.5, 2.5, 0]
+                ];
+                $weight_female = [
+                    [0, 5.5, 0, 1.5, 0, 3],
+                    [0, 5, 0, 2, 0, 3],
+                    [0, 6, 0, 2, 0, 2],
+                    [0, 2, 0, 2, 0, 6],
+                    [1, 0, 0, 3, 0, 6],
+                    [2, 0, 0, 5, 0, 3],
+                    [2, 0, 0, 3, 0, 5],
+                    [2.5, 0, 0, 2.5, 0, 5],
+                    [1.5, 0, 0, 3.5, 0, 5],
+                    [1.5, 0, 0, 4.5, 0, 4],
+                    [5, 0, 0, 2.5, 0, 2.5],
+                    [4, 0, 0, 2.5, 0, 3.5],
+                    [5, 0, 2, 3, 0, 0],
+                    [0, 0, 0, 5, 0, 5],
+                    [0, 2.5, 0, 0, 3.5, 4],
+                    [0, 5, 0, 0, 5, 0],
+                    [0, 6, 0, 0, 2, 2],
+                    [0, 5.5, 0, 2.5, 0, 2]
+                ];
+                $course_score = array_fill(1, 18, 0);
+                // print_r($score);
+                for ($i = 1; $i <= 18; $i++) {
+                    for($j = 0; $j < 6; $j++) {
+                        // print_r($course_score);
+                        $course_score[$i] += $score[$j] * $weight_female[$i-1][$j];
+                    }
+                }
+                $course_category = [];
+                while (count($course_category) < 3) {
+                    $maxs = array_keys($course_score, max($course_score));
+                    foreach ($maxs as $max) {
+                        $course_category[] = $max;
+                        $course_score[$max] = 0;
+                    }
+                }
+                if ((isset($_SESSION['isLogin']) && is_bool($_SESSION['isLogin']) && $_SESSION['isLogin'])) {
+                    $data['rawAns'] = json_encode($_SESSION['surv_ans']);
+                    $data['recCategories'] = json_encode($course_category);
+                    $data['score'] = json_encode($score);
+                    (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($data);
+                    header("Location: /student/myScore/");
+                } else {
+                    $_SESSION['raw_ans'] = $raw_score;
+                    header("Location: /survey/signup/");
+                }
+                exit();
+            }
+        } else {
+            // $question_step = $_SESSION['question_step'];
+            // if ($id == $question_step) {
+            //     $question = (new SurveyModel)->where(['id = :id'], [':id' => $_SESSION['question_order'][$id-1]])->fetch();
+            //     $this->assign('question', $question); 
+            //     $this->render();
+            // } else {
+            //     header("Location: /survey/question/$question_step/");
+            // }
+            // exit();
+        }
+        $question = (new SurveyModel)->where(['id = :id'], [':id' => $qid])->fetch();
+        $this->assign('step', $step); 
+        $this->assign('question', $question); 
+        $this->render();
     }
 
     public function signup()

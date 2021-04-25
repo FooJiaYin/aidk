@@ -46,7 +46,7 @@
                 scaleLineColor: "#333",
                 scaleOverride: true,
                 scaleSteps: 1,
-                scaleStepWidth: 100,
+                scaleStepWidth: 40,
                 showTooltips: false
             };
 

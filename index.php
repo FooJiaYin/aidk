@@ -18,3 +18,5 @@ session_start();
 
 // 實體化框架
 (new libraries\Core($config))->run();
+
+?>

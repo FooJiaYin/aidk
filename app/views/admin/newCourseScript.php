@@ -125,7 +125,20 @@
         course['description'] = $('textarea[name = "description"]').val();
         course['price'] = $('input[name = "price"]').val();
         course['teacher'] = $('select[name = "teacher"]').val();
-        course['category'] = $('select[name = "category"]').val();
+        // course['category'] = $('select[name = "category"]').val();
+        course['category'] = "[";
+        $('input[name = "category[]"]:checked').each(function() {
+            // console.log($(this).attr('value'));
+            course['category'] += $(this).attr('value') + ", ";
+        });
+        course['category'] = course['category'].slice(0, -2);
+        course['category'] += "]";
+        // course['category'] = [];
+        // $('input[name = "category[]"]:checked').each(function() {
+            //     console.log($(this).attr('value'));
+            //     course['category'].push($(this).attr('value'));
+            // });
+        // course['category'] = JSON.stringify(course['category']);
         var chapter_data = $('.chp').children();
         var chapter_array = [];
         var k = 0;
@@ -148,6 +161,7 @@
         });
         course['chapter'] = chapter_array;
         course = JSON.stringify(course);
+        // console.log(course);
         fd.append('course', course);
         var imgs = $('#img').find('input[name="img[]"]');
         imgs.each(function(i) {
