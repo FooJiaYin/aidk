@@ -20,6 +20,34 @@ class CourseModel extends Model
         return $sth->fetchAll();
     }
 
+    public function getCourseStu($id)
+    {
+        $criteria = [['gender', 'F'], ['gender', 'M'], 
+            ['grade', '1'], ['grade', '2'], ['grade', '3']
+        ];
+        $sql = "SELECT COUNT(*) AS count FROM `student` AS a, `course_bought` AS b WHERE b.course = :course AND a.id = b.user";
+        $sth = Db::pdo()->prepare($sql);
+        $sth = $this->formatParam($sth, [':course' => $id]);
+        $sth->execute();
+        $info['total'] = $sth->fetch()['count'];
+        for($d = 1; $d <= 7; $d += 1) {
+            $sql = "SELECT COUNT(*) AS count FROM `student` AS a, `course_bought` AS b WHERE b.course = :course AND a.id = b.user AND DAYOFWEEK(b.bought_time) = :day";
+            $sth = Db::pdo()->prepare($sql);
+            $sth = $this->formatParam($sth, [':course' => $id]);
+            $sth = $this->formatParam($sth, [':day' => $d]);
+            $sth->execute();
+            $info['day'.strval($d)] = $sth->fetch()['count'];
+        }
+        foreach($criteria as $c) {
+            $sql = "SELECT COUNT(*) AS count FROM `student` AS a, `course_bought` AS b WHERE b.course = :course AND a.id = b.user AND a.".$c[0]." = '".$c[1]."'";
+            $sth = Db::pdo()->prepare($sql);
+            $sth = $this->formatParam($sth, [':course' => $id]);
+            $sth->execute();
+            $info[$c[0].$c[1]] = $sth->fetch()['count'];
+        }
+        return $info;
+    }
+
     public function getCategoryCourses($category)
     {
         $sql = "SELECT * FROM `course` WHERE 

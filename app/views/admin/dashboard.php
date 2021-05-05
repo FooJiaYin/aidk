@@ -29,4 +29,10 @@
             <h2 class="card-subtitle">0小時25分</h2>
         </div>
     </div>
+    <div class="card h-100">
+        <div class="card-body">
+            <h5 class="card-title">問卷填寫人數</h5>
+            <h2 class="card-subtitle"><?= $surveyCount ?></h2>
+        </div>
+    </div>
 </div>

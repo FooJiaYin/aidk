@@ -27,14 +27,14 @@
                         <th scope="row"><?= $course['name'] ?></th>
                         <th scope="row"><?= $course['price'] ?></th>
                         <th scope="row"><?= $course['stuCount'] ?></th>
-                        <th scope="row"><?= $course['price'] * $course['stuCount'] ?></th>
+                        <th scope="row"><?= $course['price'] * $course['share'] * $course['stuCount'] ?></th>
                         <td>
                             <div class="row m10">
                                 <div class="col-6">
                                     <a href="../courseEdit/<?= $course['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">修改</a>
                                 </div>
                                 <div class="col-6">
-                                    <a href="#!" class="btn btn-outline-dark btn-block badge-pill">分析</a>
+                                    <a href="../../course/analysis/<?= $course['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">分析</a>
                                 </div>
                                 <div class="col-6">
                                     <a class="btn btn-outline btn-danger btn-block badge-pill del-course" style="color:#FFF;" data-id="<?= $course['id'] ?>" data-name="<?= $course['name'] ?>">刪除</a>

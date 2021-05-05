@@ -19,6 +19,19 @@
                 <input type="number" name="price" min="1" max="30000" class="form-control" value="<?= $course['price'] ?>" required="">
             </div>
             <div class="form-group">
+                <label>分潤比例</label>
+                <div class="row">
+                    <div class="col-1" style="text-align: center">
+                        平台 <span id="share-platform"><?= $course['share'] ?></span>
+                    </div>
+                    <div class="col-10">
+                        <input type="range" name="share" min="0" max="1" step="0.1" class="form-control" value="<?= $course['share'] ?>" required="" onchange="updateShare(this.value)">
+                    </div>
+                    <div class="col-1" style="text-align: center">
+                        老師 <span id="share-teacher"><?= 1-$course['share'] ?></span>
+                    </div>
+            </div>
+            <div class="form-group">
                 <label>開課老師</label>
                 <select class="form-control" name="teacher" required="">
                     <option value="">請選擇</option>
@@ -54,3 +67,10 @@
     </div>
 
 </div>
+
+<script>
+    function updateShare(value) {
+        $("#share-platform").html(value);
+        $("#share-teacher").html(Math.round((1-value) * 10) / 10);
+    }
+</script>

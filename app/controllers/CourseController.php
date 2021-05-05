@@ -121,6 +121,16 @@ class CourseController extends Controller
         $this->assign('category', $category);        
         $this->render();
     }
+    
+    public function analysis($id = null) {
+        $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
+        if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher'])) {
+            $count = (new CourseModel)->getCourseStu($id);
+            $this->assign('course', $course);
+            $this->assign('count', $count);
+            $this->render();
+        }
+    }
 
     public function buy($courseID = null)
     {

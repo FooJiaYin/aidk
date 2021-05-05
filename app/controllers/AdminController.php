@@ -67,10 +67,12 @@ class AdminController extends Controller
         $courseCount = (new CourseModel)->count();
         $studentCount = (new StudentModel)->count();
         $teacherCount = (new TeacherModel)->count();
+        $surveyCount = (new StudentModel)->where(['rawAns IS NOT NULL'])->count();
 
         $this->assign('courseCount', $courseCount);
         $this->assign('studentCount', $studentCount);
         $this->assign('teacherCount', $teacherCount);
+        $this->assign('surveyCount', $surveyCount);
         $this->render();
     }
 
@@ -207,6 +209,7 @@ class AdminController extends Controller
                     'description' => $_POST['description'],
                     'price' => $_POST['price'],
                     'teacher' => $_POST['teacher'],
+                    'share' => $_POST['share'],
                     'category' => $categoryStr
                 ];
                 (new CourseModel)->where(['id = :id'], [':id' => $id])->update($course);
