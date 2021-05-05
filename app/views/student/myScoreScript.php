@@ -17,7 +17,8 @@
             }
         }
 
-        ready(function() {
+        ready(function() {            
+            var vw = (window.innerWidth > 0) ? window.innerWidth : screen.width;
             var data = {
                 labels: [
                     "企業型 Enterprising",
@@ -35,11 +36,11 @@
                 }]
 
             };
-
+            var fontSize = (vw > 990)? 18 : 12;
             var radarOpts = {
                 pointLabelFontFamily: "sans-serif",
                 pointLabelFontStyle: "400",
-                pointLabelFontSize: 18,
+                pointLabelFontSize: fontSize,
                 pointLabelFontColor: "#000",
                 pointDotRadius: 5,
                 angleLineColor: "#333",

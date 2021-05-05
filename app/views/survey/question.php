@@ -13,8 +13,8 @@
     <form action="." method="POST">
 
         <center>
-        <div style="max-width: 400px;">
-            <img src="/static/survey/images/<?= $question['id'] ?>.png">
+        <div>
+            <img style="max-width: 60vw; max-height: 40vh;" src="/static/survey/images/<?= $question['id'] ?>.png">
         </div>
         <div class="boxBor">
             <div class="titleJL q">
