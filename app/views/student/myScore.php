@@ -24,7 +24,17 @@
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
 
                 <div class="tab1Box">
-                    <div class="btnJL fr_jl" style="position: relative;z-index: 999;"><a href="/survey/instructions/">重新測驗</a></div>
+                    <div class="px-5 my-3 mw-75">
+                        <p>美國約翰‧霍普金斯大學心理學教授John Holland，於1959年開始陸續提出職業興趣理論及其延伸，將人格與職業興趣結合，分為六種類型。 受測者主要利用問卷調查來瞭解自己的性向，並根據分數而計算出個人對六種特質的偏好。</p>
+                        <p>本測驗係以上述的生涯理論為基礎所發展而成的。他認為職業選擇是個人基於過去經驗的累積，加上人格特質的影響而做的抉擇，故同一職業會吸引有相同經驗與相似人格特質的人，職業上的適應與滿足也決定於人格和工作環境的適配度。以下為何倫所提的一些理論假設：</p>
+                        <ol>
+                            <li>人的個性與工作環境皆可區分為六種類型：實用型（R）、研究型（I）、藝術型（A）、社會型（S）、企業型（E）、事務型（C）。</li>
+                            <li>找到與自己類型一致的環境，會生活得較為滿意，學業、工作起來會更容易感受到勝任愉快</li>
+                        </ol>
+                    </div>
+                    <center>
+                        <div class="btnJL" style="position: relative;width:fit-content"><a href="/survey/instructions/">重新測驗</a></div>
+                    </center>
                     <canvas class="skills-radar" id="skills-radar"></canvas>
                 </div>
 
