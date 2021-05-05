@@ -232,6 +232,89 @@ class SurveyController extends Controller
         }
     }*/
 
+    private function process_ans() {
+        $score = [0, 0, 0, 0, 0, 0];
+        for ($i = 1; $i <= 8; $i++) {
+            $score[1] += $_SESSION['surv_ans'][$i];
+        }
+        for ($i = 9; $i <= 16; $i++) {
+            $score[5] += $_SESSION['surv_ans'][$i];
+        }
+        for ($i = 17; $i <=24; $i++) {
+            $score[3] += $_SESSION['surv_ans'][$i];
+        }
+        for ($i = 25; $i <= 32; $i++) {
+            $score[4] += $_SESSION['surv_ans'][$i];
+        }
+        for ($i = 33; $i <= 40; $i++) {
+            $score[2] += $_SESSION['surv_ans'][$i];
+        }
+        for ($i = 41; $i <= 48; $i++) {
+            $score[0] += $_SESSION['surv_ans'][$i];
+        }
+        $weight_male = [
+            [0, 6, 0, 0, 2.5, 1.5],
+            [0, 6, 0, 0, 4, 0],
+            [0, 5.5, 0, 0, 3.5, 1],
+            [0, 2, 0, 0, 2, 6],
+            [0, 2, 0, 2, 0, 6],
+            [2, 0, 0, 6, 0, 2],
+            [1.5, 0, 0, 3, 0, 5.5],
+            [2, 0, 0, 3, 0, 5],
+            [2, 0, 0, 4, 0, 4],
+            [1.5, 0, 0, 4.5, 0, 4],
+            [5, 0, 0, 3, 0, 2],
+            [6, 0, 0, 4, 0, 0],
+            [6.5, 0, 0, 2, 0, 0],
+            [0, 0, 0, 4.5, 1.5, 4],
+            [0, 4, 0, 0, 6, 0],
+            [0, 5, 0, 0, 5, 0],
+            [0, 6, 0, 0.5, 3.5, 0],
+            [0, 5, 0, 2.5, 2.5, 0]
+        ];
+        $weight_female = [
+            [0, 5.5, 0, 1.5, 0, 3],
+            [0, 5, 0, 2, 0, 3],
+            [0, 6, 0, 2, 0, 2],
+            [0, 2, 0, 2, 0, 6],
+            [1, 0, 0, 3, 0, 6],
+            [2, 0, 0, 5, 0, 3],
+            [2, 0, 0, 3, 0, 5],
+            [2.5, 0, 0, 2.5, 0, 5],
+            [1.5, 0, 0, 3.5, 0, 5],
+            [1.5, 0, 0, 4.5, 0, 4],
+            [5, 0, 0, 2.5, 0, 2.5],
+            [4, 0, 0, 2.5, 0, 3.5],
+            [5, 0, 2, 3, 0, 0],
+            [0, 0, 0, 5, 0, 5],
+            [0, 2.5, 0, 0, 3.5, 4],
+            [0, 5, 0, 0, 5, 0],
+            [0, 6, 0, 0, 2, 2],
+            [0, 5.5, 0, 2.5, 0, 2]
+        ];
+        $course_score = array_fill(1, 18, 0);
+        // print_r($score);
+        for ($i = 1; $i <= 18; $i++) {
+            for($j = 0; $j < 6; $j++) {
+                // print_r($course_score);
+                $course_score[$i] += $score[$j] * $weight_female[$i-1][$j];
+            }
+        }
+        $course_category = [];
+        while (count($course_category) < 3) {
+            $maxs = array_keys($course_score, max($course_score));
+            foreach ($maxs as $max) {
+                $course_category[] = $max;
+                $course_score[$max] = 0;
+            }
+        }        
+        $data['rawAns'] = json_encode($_SESSION['surv_ans']);
+        $data['recCategories'] = json_encode($course_category);
+        $data['score'] = json_encode($score);        
+        (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($data);
+        // return $data;
+    }
+
     public function question($step = 1)
     {
         // if(!isset($_SESSION['isLogin']) || !is_bool($_SESSION['isLogin']) || !$_SESSION['isLogin']) {
@@ -249,7 +332,7 @@ class SurveyController extends Controller
         }
         $qid = $_SESSION['question_order'][$step-1];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            print_r($_POST);
+            // print_r($_POST);
             $_SESSION['surv_ans'][$qid] = intval($_POST[$qid]);
             if ($step < 48) {
                 $step += 1;
@@ -258,86 +341,8 @@ class SurveyController extends Controller
                 exit();
             }
             else {
-                $score = [0, 0, 0, 0, 0, 0];
-                for ($i = 1; $i <= 8; $i++) {
-                    $score[1] += $_SESSION['surv_ans'][$i];
-                }
-                for ($i = 9; $i <= 16; $i++) {
-                    $score[5] += $_SESSION['surv_ans'][$i];
-                }
-                for ($i = 17; $i <=24; $i++) {
-                    $score[3] += $_SESSION['surv_ans'][$i];
-                }
-                for ($i = 25; $i <= 32; $i++) {
-                    $score[4] += $_SESSION['surv_ans'][$i];
-                }
-                for ($i = 33; $i <= 40; $i++) {
-                    $score[2] += $_SESSION['surv_ans'][$i];
-                }
-                for ($i = 41; $i <= 48; $i++) {
-                    $score[0] += $_SESSION['surv_ans'][$i];
-                }
-                $weight_male = [
-                    [0, 6, 0, 0, 2.5, 1.5],
-                    [0, 6, 0, 0, 4, 0],
-                    [0, 5.5, 0, 0, 3.5, 1],
-                    [0, 2, 0, 0, 2, 6],
-                    [0, 2, 0, 2, 0, 6],
-                    [2, 0, 0, 6, 0, 2],
-                    [1.5, 0, 0, 3, 0, 5.5],
-                    [2, 0, 0, 3, 0, 5],
-                    [2, 0, 0, 4, 0, 4],
-                    [1.5, 0, 0, 4.5, 0, 4],
-                    [5, 0, 0, 3, 0, 2],
-                    [6, 0, 0, 4, 0, 0],
-                    [6.5, 0, 0, 2, 0, 0],
-                    [0, 0, 0, 4.5, 1.5, 4],
-                    [0, 4, 0, 0, 6, 0],
-                    [0, 5, 0, 0, 5, 0],
-                    [0, 6, 0, 0.5, 3.5, 0],
-                    [0, 5, 0, 2.5, 2.5, 0]
-                ];
-                $weight_female = [
-                    [0, 5.5, 0, 1.5, 0, 3],
-                    [0, 5, 0, 2, 0, 3],
-                    [0, 6, 0, 2, 0, 2],
-                    [0, 2, 0, 2, 0, 6],
-                    [1, 0, 0, 3, 0, 6],
-                    [2, 0, 0, 5, 0, 3],
-                    [2, 0, 0, 3, 0, 5],
-                    [2.5, 0, 0, 2.5, 0, 5],
-                    [1.5, 0, 0, 3.5, 0, 5],
-                    [1.5, 0, 0, 4.5, 0, 4],
-                    [5, 0, 0, 2.5, 0, 2.5],
-                    [4, 0, 0, 2.5, 0, 3.5],
-                    [5, 0, 2, 3, 0, 0],
-                    [0, 0, 0, 5, 0, 5],
-                    [0, 2.5, 0, 0, 3.5, 4],
-                    [0, 5, 0, 0, 5, 0],
-                    [0, 6, 0, 0, 2, 2],
-                    [0, 5.5, 0, 2.5, 0, 2]
-                ];
-                $course_score = array_fill(1, 18, 0);
-                // print_r($score);
-                for ($i = 1; $i <= 18; $i++) {
-                    for($j = 0; $j < 6; $j++) {
-                        // print_r($course_score);
-                        $course_score[$i] += $score[$j] * $weight_female[$i-1][$j];
-                    }
-                }
-                $course_category = [];
-                while (count($course_category) < 3) {
-                    $maxs = array_keys($course_score, max($course_score));
-                    foreach ($maxs as $max) {
-                        $course_category[] = $max;
-                        $course_score[$max] = 0;
-                    }
-                }
                 if ((isset($_SESSION['isLogin']) && is_bool($_SESSION['isLogin']) && $_SESSION['isLogin'])) {
-                    $data['rawAns'] = json_encode($_SESSION['surv_ans']);
-                    $data['recCategories'] = json_encode($course_category);
-                    $data['score'] = json_encode($score);
-                    (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($data);
+                    $this->process_ans();
                     header("Location: /student/myScore/");
                 } else {
                     $_SESSION['raw_ans'] = $raw_score;
@@ -364,7 +369,7 @@ class SurveyController extends Controller
 
     public function signup()
     {
-        if (isset($_GET['debug'])) $_SESSION['surv_score'] = "[20, 30, 40, 50, 60, 70]";
+        // if (isset($_GET['debug'])) $_SESSION['surv_score'] = "[20, 30, 40, 50, 60, 70]";
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userCheck = (new StudentModel)->where(['account = :account'], [':account' => $_POST['email']])->count();
             if ($userCheck) {
@@ -397,8 +402,9 @@ class SurveyController extends Controller
 
             $account = $_POST['email'];
             if ($student && auth::doLogin($student, $_POST['password'])) {
-                (new LogModel)->writeLog("學生帳號註冊(帳號: $account)");
-                header("Location: /student/profile/");
+                (new LogModel)->writeLog("學生帳號註冊(帳號: $account)");                
+                $this->process_ans();
+                header("Location: /student/myScore/");
             } else {
                 (new LogModel)->writeLog("學生帳號註冊失敗(帳號: $account, 異常操作)");
                 //print_r($user);
@@ -472,12 +478,16 @@ class SurveyController extends Controller
             if (($_POST['loginBy'] == "web" && $student && auth::doLogin($student, $_POST['password'])) ||
                 (($_POST['loginBy'] == "FB" || $_POST['loginBy'] == "GOOGLE") && $student)
             ) {
-                (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($user);
+                // (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($user);
                 (new LogModel)->writeLog("學生登入(重新測驗)(帳號: $account)");
-                if ($user['score'] == "[0, 0, 0, 0, 0, 0]") 
-                    header("Location: /student/profile/");
-                else 
-                    header("Location: /student/myScore/");
+                $this->process_ans();
+                header("Location: /student/myScore/");
+                // if ($user['score'] == "[0, 0, 0, 0, 0, 0]") 
+                //     header("Location: /student/profile/");
+                // else {
+                //     $this->process_ans();
+                //     header("Location: /student/myScore/");
+                // }
             } else {
                 (new LogModel)->writeLog("學生登入失敗(重新測驗)(帳號: $account)");
                 if ($_POST['loginBy'] == "web")
