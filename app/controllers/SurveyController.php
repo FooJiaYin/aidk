@@ -391,11 +391,11 @@ class SurveyController extends Controller
             $user['address'] = $_POST['address'];
             $user['google_token'] = $_POST['google_token'];
             $user['fb_token'] = $_POST['fb_token'];
-            if (isset($_SESSION['surv_score'])) {
-                $user['score'] = $_SESSION['surv_score'];
-            } else {
-                $user['score'] = "[0, 0, 0, 0, 0, 0]";
-            }
+            // if (isset($_SESSION['surv_score'])) {
+            //     $user['score'] = $_SESSION['surv_score'];
+            // } else {
+            //     $user['score'] = "[0, 0, 0, 0, 0, 0]";
+            // }
             (new StudentModel)->add($user);
 
             $student = (new StudentModel)->where(['account = :account'], [':account' => $_POST['email']])->fetch();
@@ -403,8 +403,12 @@ class SurveyController extends Controller
             $account = $_POST['email'];
             if ($student && auth::doLogin($student, $_POST['password'])) {
                 (new LogModel)->writeLog("學生帳號註冊(帳號: $account)");                
-                $this->process_ans();
-                header("Location: /student/myScore/");
+                if (isset($_SESSION['surv_score'])) {
+                    $this->process_ans();
+                    header("Location: /student/myScore/");
+                } else {
+                    header("Location: /student/profile/");
+                }
             } else {
                 (new LogModel)->writeLog("學生帳號註冊失敗(帳號: $account, 異常操作)");
                 //print_r($user);
