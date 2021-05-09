@@ -61,9 +61,36 @@ class TeacherController extends Controller
         exit();
     }
 
+    public function profile()
+    {
+        if (auth::checkAuth(true, 'TEACHER')) {
+            $this->render();
+        } 
+    }
+
+    public function profileEdit()
+    {
+        if (auth::checkAuth(true, 'TEACHER')) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $teacher = [
+                    'name' => $_POST['name'],
+                    'gender' => $_POST['gender'],
+                    'email' => $_POST['email']
+                ];
+                (new TeacherModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($teacher);
+                (new LogModel)->writeLog("修改老師資料(老師ID: $id)");
+                header("Location: /teacher/profile/");
+            } else {
+                // $teacher = (new TeacherModel)->where(['id = :id'], [':id' => $id])->fetch();
+                // $this->assign('teacher', $teacher);
+                $this->render();
+            }
+        } 
+    }
+
     public function courseList()
     {
-        auth::checkAuth(true, true);
+        auth::checkAuth(true, 'TEACHER');
 
         $courseList = (new CourseModel)->where(['teacher = :teacher'], [':teacher' => $_SESSION['id']])->fetchAll();
 

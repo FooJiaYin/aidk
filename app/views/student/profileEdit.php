@@ -18,40 +18,41 @@
         <h1>基本資料</h1>
     </div>
 
-    <form>
+    <form id="course_form" action="." method="POST">
         <div class="row m20">
             <div class="form-group col-md-6">
                 <label for="">學校</label>
-                <input type="text" class="form-control" value="<?= $user['school'] ?>" readonly="">
+                <input type="text" name="school" class="form-control" value="<?= $user['school'] ?>" required="">
             </div>
             <div class="form-group col-md-6">
                 <label for="">年級</label>
-                <input type="text" class="form-control" value="<?= $user['grade'] ?>" readonly="">
+                <input type="number" name="grade" min="1" max="3" class="form-control" value="<?= $user['grade'] ?>" required="">
             </div>
             <div class="form-group col-md-6">
                 <label for="">生日</label>
-                <input type="text" class="form-control" value="<?= $user['birthday'] ?>" readonly="">
+                <input type="text" id="birthday" name="birthday" class="form-control" value="<?= $user['birthday'] ?>" required="">
             </div>
             <div class="form-group col-md-6">
                 <label for="">性別</label>
-                <input type="text" class="form-control" value="<?= $user['gender'] ?>" readonly="">
+                <select class="form-control" name="gender" required>
+                    <option <?= ($user['gender'] == 'M') ? 'selected=""' : '' ?>>男</option>
+                    <option <?= ($user['gender'] == 'F') ? 'selected=""' : '' ?>>女</option>
+                </select>
             </div>
             <div class="form-group col-md-6">
                 <label for="">電子郵件</label>
-                <input type="email" class="form-control" value="<?= $user['account'] ?>" readonly="">
+                <input type="email" name="account" class="form-control" value="<?= $user['account'] ?>" require="">
             </div>
             <div class="form-group col-md-6">
                 <label for="">電話</label>
-                <input type="text" class="form-control" value="<?= $user['phone'] ?>" readonly="">
+                <input type="text" name="phone" class="form-control" value="<?= $user['phone'] ?>" required="">
             </div>
             <div class="form-group col-md-12">
                 <label for="">住址</label>
-                <input type="text" class="form-control" value="<?= $user['address'] ?>" readonly="">
+                <input type="text" name="address" class="form-control" value="<?= $user['address'] ?>" required="">
             </div>
         </div>
-        <div class="btnJL" style="width:fit-content"><a href="/student/profileEdit/">修改資料</a></div>
+        <button type="submit" class="btn btn-lg btn-primary">確認修改</button>
     </form>
 
 </div>
-
-<input type="hidden" id="score" value="<?= $user['score'] ?>">

@@ -217,6 +217,7 @@ class AdminController extends Controller
                 header("Location: /admin/courses/");
             } else {
                 $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
+                if(! $course) header("Location: /admin/courses/");
                 $teachers = (new TeacherModel)->fetchAll();
                 $course['category'] = json_decode($course['category'], true);
                 $this->assign('course', $course);
@@ -314,7 +315,7 @@ class AdminController extends Controller
                     $stu = [
                         'name' => $_POST['name'],
                         'gender' => $_POST['gender'],
-                        'email' => $_POST['email'],
+                        'account' => $_POST['account'],
                         'credit' => $_POST['credit'],
                         'school' => $_POST['school'],
                         'grade' => $_POST['grade'],

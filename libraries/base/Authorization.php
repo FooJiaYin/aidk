@@ -61,11 +61,17 @@ class Authorization
 
     public static function checkAuth($isRedirect = true, $isTeacher = false)
     {
+        if ($isRedirect) {
+            if ($isTeacher == 'ADMIN' && (!$_SESSION['isLogin'] || $_SESSION['loginType'] != 3)) {
+                header("Location: /admin/login/");
+            }
+        }
         if (!(isset($_SESSION['isLogin']) && is_bool($_SESSION['isLogin']) && $_SESSION['isLogin'])) {
             if ($isRedirect) {
                 if ($isTeacher == 'ADMIN') {
                     header("Location: /admin/login/");
-                } else if ($isTeacher) {
+                }
+                else if ($isTeacher) {
                     header("Location: /teacher/login/");
                 } else {
                     header("Location: /");
@@ -74,8 +80,22 @@ class Authorization
             } else {
                 return false;
             }
-        } else {
-            return true;
+        } else {            
+            if ($isTeacher == 'ADMIN') {
+                if($_SESSION['loginType'] == 3) return true;
+                else {
+                    if ($isRedirect) header("Location: /admin/login/");
+                    else return false;
+                }
+            } else if ($isTeacher == 'TEACHER') {
+                if($_SESSION['loginType'] == 2) return true;
+                else {
+                    if ($isRedirect) header("Location: /teacher/login/");
+                    else return false;
+                }
+            } else {
+                return true;
+            }
         }
     }
 

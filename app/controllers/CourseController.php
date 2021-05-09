@@ -124,11 +124,13 @@ class CourseController extends Controller
     
     public function analysis($id = null) {
         $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
-        if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher'])) {
-            $count = (new CourseModel)->getCourseStu($id);
-            $this->assign('course', $course);
-            $this->assign('count', $count);
-            $this->render();
+        if(isset($_SESSION['isLogin'])) {
+            if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher'])) {
+                $count = (new CourseModel)->getCourseStu($id);
+                $this->assign('course', $course);
+                $this->assign('count', $count);
+                $this->render();
+            }
         }
     }
 

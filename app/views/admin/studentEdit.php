@@ -8,7 +8,7 @@
         <form id="course_form" action="." method="POST">
             <div class="form-group">
                 <label>信箱</label>
-                <input type="text" class="form-control" value="<?= $stu['account'] ?>" readonly="">
+                <input type="text" class="form-control" name="account" value="<?= $stu['account'] ?>">
             </div>
             <div class="form-group">
                 <label>學生姓名</label>
@@ -17,8 +17,8 @@
             <div class="form-group">
                 <label>性別</label>
                 <select class="form-control" name="gender" required>
-                    <option <?= ($stu['gender'] == 'M') ? 'selected=""' : '' ?>>M</option>
-                    <option <?= ($stu['gender'] == 'F') ? 'selected=""' : '' ?>>F</option>
+                    <option <?= ($stu['gender'] == 'M') ? 'selected=""' : '' ?>>男</option>
+                    <option <?= ($stu['gender'] == 'F') ? 'selected=""' : '' ?>>女</option>
                 </select>
             </div>
             <div class="form-group">

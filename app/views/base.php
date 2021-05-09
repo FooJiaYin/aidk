@@ -113,7 +113,9 @@
                         <li>
                             <a href="#!"><img src="/static/images/img_profile.svg"></a>
                             <ul class="dropmenu">
-                                <li><a href="/teacher/courseList/"><?= $_SESSION['name'] ?> 老師</a></li>
+                                <li><?= $_SESSION['name'] ?> 老師</a></li>
+                                <li><a href="/teacher/profile/">個人資料</a></li>
+                                <li><a href="/teacher/courseList/">開課清單</a></li>
                                 <li><a href="/teacher/logout">登出</a></li>
                             </ul>
                         </li>

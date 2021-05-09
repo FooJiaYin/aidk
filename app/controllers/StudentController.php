@@ -109,6 +109,32 @@ class StudentController extends Controller
         $this->render();
     }
 
+    public function profileEdit()
+    {
+        if(auth::checkAuth()) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {                
+                $stu = [
+                    'name' => $_POST['name'],
+                    'gender' => $_POST['gender'],
+                    'account' => $_POST['account'],
+                    'credit' => $_POST['credit'],
+                    'school' => $_POST['school'],
+                    'grade' => $_POST['grade'],
+                    'birthday' => $_POST['birthday'],
+                    'phone' => $_POST['phone'],
+                    'address' => $_POST['address'],
+                ];
+                (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($stu);
+                (new LogModel)->writeLog("修改學生資料(學生ID: $id)");
+                header("Location: /student/profile/");
+            } else {
+                $this->render();
+            }
+        } else {
+            header("Location: /student/login/");
+        }
+    }
+
     public function myScore()
     {
         auth::checkAuth();        
