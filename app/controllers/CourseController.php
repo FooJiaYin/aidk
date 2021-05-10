@@ -28,12 +28,23 @@ class CourseController extends Controller
         $this->assign('courses', $courses);  
     }
 
+    private function getQueryOrder() {
+        if(!isset($_GET['order'])) {
+            $order = 'id';
+        }            
+        else {
+            $order = substr($_GET['order'], 0, -1);
+            if(substr($_GET['order'], -1) == 'D') $order .= " DESC";
+        }
+        return $order;
+    }
+
     public function index($search = null)
     {
         if ($search == 'search' && isset($_GET['keyword']) && $_GET['keyword'] != '') {
             $courses = (new CourseModel)->searchCourse($_GET['keyword']);
         } else {
-            $courses = (new CourseModel)->fetchAll();
+            $courses = (new CourseModel)->order([$this->getQueryOrder()])->fetchAll();
         }
         $this->assignCourses($courses);       
         $this->assign('category', null);
@@ -116,7 +127,7 @@ class CourseController extends Controller
 
     public function category($category = 0)
     {
-        $courses = (new CourseModel)->getCategoryCourses($category);
+        $courses = (new CourseModel)->getCategoryCourses($category, $this->getQueryOrder());
         $this->assignCourses($courses);
         $this->assign('category', $category);        
         $this->render();

@@ -1,5 +1,14 @@
 <div class="container-md">
 
+    <div class="row mb-3 justify-content-end">
+        <form >
+            <div class="btn-group" role="group" >
+                <button type="submit" name="order" class="btn border-dark <?= (!isset($_GET['order']) || $_GET['order'] == 'idA') ? 'active' : '' ?>" value="idA">默認排序</button>
+                <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'idD') ? 'active' : '' ?>" value="idD">最新</button>
+                <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'stuCountD') ? 'active' : '' ?>" value="stuCountD">熱門</button>
+            </div>
+        </form>
+    </div>
     <div class="row">
         <?php if ($courses) : ?>
             <?php foreach ($courses as $course) : ?>
@@ -21,7 +30,7 @@
                                 <?php foreach ($course['category'] as $category) : ?>
                                     <div class="card-body text-right">
                                         <h5 class="mb-1">
-                                            <div class="card textC rounded-pill border-dark course_sort">
+                                            <div class="card textC rounded-pill border-dark course_order">
                                                 <a href="/course/category/<?= $category ?>/">
                                                     <?= COURSE_CATEGORY[$category] ?>
                                                 </a>

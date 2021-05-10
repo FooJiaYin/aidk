@@ -2,6 +2,15 @@
 
     <div class="titleJL textC marT0 marB0">
         <h1>log歷史紀錄</h1>
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <form action=".">
+                    <div class="btn-group" role="group" >
+                    <button type="submit" name="order" class="btn border-dark <?= (!isset($_GET['order']) || $_GET['order'] == 'idA') ? 'active' : '' ?>" value="idA">舊至新</button>
+                    <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'idD') ? 'active' : '' ?>" value="idD">新至舊</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <table class="table table-bordered marT30">

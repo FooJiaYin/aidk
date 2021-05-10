@@ -2,9 +2,23 @@
 
     <div class="titleJL textC marT0 marB0">
         <h1>課程管理</h1>
-        <form action=".">
-            <input type="text" class="form-control" name="search" placeholder="搜尋" required="">
-        </form>
+        <div class="row">
+            <div class="col">
+                <form action=".">
+                    <input type="text" class="form-control" name="search" placeholder="搜尋" required="">
+                </form>
+            </div>
+            <div class="col-auto">
+                <form action=".">
+                    <div class="btn-group" role="group" >
+                    <button type="submit" name="order" class="btn border-dark <?= (!isset($_GET['order']) || $_GET['order'] == 'idA') ? 'active' : '' ?>" value="idA">默認排序</button>
+                    <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'idD') ? 'active' : '' ?>" value="idD">最新</button>
+                    <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'stuCountD') ? 'active' : '' ?>" value="stuCountD">熱門</button>
+                    <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'priceA') ? 'active' : '' ?>" value="priceA">價格（低至高）</button>
+                    <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'priceD') ? 'active' : '' ?>" value="priceD">價格（高至低）</button>
+                </div>
+            </form>
+        </div>
         <div class="uploadBtn"><a href="../newCourse"><i class="fa fa-plus-square"></i></a></div>
     </div>
 

@@ -96,6 +96,12 @@ btn
 	transition: all 0.5s;
 }
 
+.btn-group .btn {
+  background-color: white;
+}
+.btn-group .btn.active {
+  background-color: #64B067;
+}
 
 /*
 =======================

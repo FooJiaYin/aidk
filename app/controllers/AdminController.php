@@ -76,6 +76,17 @@ class AdminController extends Controller
         $this->render();
     }
 
+    private function getQueryOrder() {
+        if(!isset($_GET['order'])) {
+            $order = 'id';
+        }            
+        else {
+            $order = substr($_GET['order'], 0, -1);
+            if(substr($_GET['order'], -1) == 'D') $order .= " DESC";
+        }
+        return $order;
+    }
+
     public function courses()
     {
         auth::checkAuth(true, 'ADMIN');
@@ -83,7 +94,7 @@ class AdminController extends Controller
         if (isset($_GET['search']) && $_GET['search'] != '') {
             $courseList = (new CourseModel)->searchCourse($_GET['search']);
         } else {
-            $courseList = (new CourseModel)->fetchAll();
+            $courseList = (new CourseModel)->order([$this->getQueryOrder()])->fetchAll();
         }
 
         $this->assign('courseList', $courseList);
@@ -247,11 +258,10 @@ class AdminController extends Controller
     public function students()
     {
         auth::checkAuth(true, 'ADMIN');
-
         if (isset($_GET['search']) && $_GET['search'] != '') {
             $stuList = (new StudentModel)->searchStu($_GET['search']);
         } else {
-            $stuList = (new StudentModel)->fetchAll();
+            $stuList = (new StudentModel)->order([$this->getQueryOrder()])->fetchAll();
         }
 
         $this->assign('stuList', $stuList);
@@ -340,11 +350,10 @@ class AdminController extends Controller
     public function teachers()
     {
         auth::checkAuth(true, 'ADMIN');
-
         if (isset($_GET['search']) && $_GET['search'] != '') {
             $teacherList = (new TeacherModel)->searchTeacher($_GET['search']);
         } else {
-            $teacherList = (new TeacherModel)->fetchAll();
+            $teacherList = (new TeacherModel)->order([$this->getQueryOrder()])->fetchAll();
         }
 
         foreach ($teacherList as $k => $t) {
@@ -456,7 +465,7 @@ class AdminController extends Controller
     {
         auth::checkAuth(true, 'ADMIN');
 
-        $logs = (new LogModel)->order(['id DESC'])->fetchAll();
+        $logs = (new LogModel)->order([$this->getQueryOrder()])->fetchAll();
 
         $this->assign('logs', $logs);
         $this->render();
