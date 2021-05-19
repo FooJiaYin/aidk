@@ -39,8 +39,35 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="school" value="<?= (isset($_SESSION['surv_email'])) ? $_SESSION['surv_school'] : '' ?>" placeholder="學校" required>
+                            <!-- <label for="">學校縣市</label> -->
+                            <select class="form-control" id="city" onchange="filter('school', 'city', 'type')" required>
+                                <option value="">選擇學校縣市</option>
+                                <?php foreach ($cities as $city) : ?>
+                                    <option value="<?= $city['city'] ?>" <?= (isset($_SESSION['surv_school_city']) && $_SESSION['surv_school_city'] == $city['city']) ? 'selected' : '' ?>><?= ($city['city'] == 'other') ? "其他" : $city['city'] ?></option>
+                                <?php endforeach ?>                            
+                            </select>
                         </div>
+                        <div class="form-group">
+                            <!-- <label for="">學校立別</label> -->
+                            <select class="form-control" id="type" onchange="filter('school', 'city', 'type')" required>
+                                <option value="">選擇學校立別</option>
+                                <?php foreach ($types as $type) : ?>
+                                    <option value="<?= $type['type'] ?>" <?= (isset($_SESSION['surv_school_type']) && $_SESSION['surv_school_type'] == $type['type']) ? 'selected' : '' ?>><?= ($type['type'] == 'other') ? "其他" : $type['type'] ?></option>
+                                <?php endforeach ?>                                
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <!-- <label for="">學校名稱</label> -->
+                            <select class="form-control" id="school" name="school" required>
+                                <option value="">選擇學校名稱</option>
+                                <?php foreach ($schools as $school) : ?>
+                                    <option city="<?= $school['city'] ?>" type="<?= $school['type'] ?>" value="<?= $school['name'] ?>" <?= (isset($_SESSION['surv_email']) && $_SESSION['surv_school'] == $school['name']) ? 'selected' : '' ?>><?= ($school['name'] == 'other') ? "其他" : $school['name'] ?></option>
+                                <?php endforeach ?>
+                            </select>
+                        </div>
+                        <!-- <div class="form-group">
+                            <input type="text" class="form-control" name="school" value="<?= (isset($_SESSION['surv_email'])) ? $_SESSION['surv_school'] : '' ?>" placeholder="學校" required>
+                        </div> -->
                         <div class="form-group">
                             <select class="form-control" name="grade" required>
                                 <option value="">選擇就讀年級</option>

@@ -7,6 +7,7 @@ use libraries\base\Authorization as auth;
 
 use app\models\StudentModel;
 use app\models\CourseModel;
+use app\models\SchoolModel;
 use app\models\TransactionModel;
 use app\models\CourseBoughtModel;
 use app\models\LogModel;
@@ -24,6 +25,22 @@ class StudentController extends Controller
         }
 
         $this->assign('user', $this->user);
+    }
+
+    public function assignSchools() {        
+        $cities = (new SchoolModel)->getDistinct('city');
+        $types = (new SchoolModel)->getDistinct('type');
+        $schools = (new SchoolModel)->fetchAll();
+        $school = (new SchoolModel)->where(['name = :name'], [':name' => $this->user['school']])->fetch();
+        if(!$school) {
+            $school['city'] = "other";
+            $school['type'] = "other";
+            $school['name'] = "other";
+        }
+        $this->assign('cities', $cities);             
+        $this->assign('types', $types);             
+        $this->assign('schools', $schools);  
+        $this->assign('school', $school);  
     }
 
     public function index()
@@ -114,10 +131,10 @@ class StudentController extends Controller
         if(auth::checkAuth()) {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {                
                 $stu = [
-                    'name' => $_POST['name'],
+                    // 'name' => $_POST['name'],
                     'gender' => $_POST['gender'],
                     'account' => $_POST['account'],
-                    'credit' => $_POST['credit'],
+                    // 'credit' => $_POST['credit'],
                     'school' => $_POST['school'],
                     'grade' => $_POST['grade'],
                     'birthday' => $_POST['birthday'],
@@ -125,9 +142,10 @@ class StudentController extends Controller
                     'address' => $_POST['address'],
                 ];
                 (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($stu);
-                (new LogModel)->writeLog("修改學生資料(學生ID: $id)");
+                (new LogModel)->writeLog("修改學生資料(學生ID)");
                 header("Location: /student/profile/");
             } else {
+                $this->assignSchools();  
                 $this->render();
             }
         } else {
@@ -140,7 +158,7 @@ class StudentController extends Controller
         auth::checkAuth();        
         $result = (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->fetch('score , recCategories');
 
-        if ($result['score'] == "[0, 0, 0, 0, 0, 0]") {
+        if (!$result['score'] || $result['score'] == "[0, 0, 0, 0, 0, 0]") {
             header("Location: /survey/instructions");
         }
             
@@ -203,7 +221,7 @@ class StudentController extends Controller
             // $randomCourse = (new CourseModel)->getRandomCourse();
             $courses = [];
             foreach ($recCategories as $category) {
-                $courses = array_merge($courses, (new CourseModel)->getCategoryCourses($category));
+                $courses = array_merge($courses, (new CourseModel)->getCategoryCourses($category, 'id ASC'));
             }
             foreach ($courses as $k => $c) {
                 $categoryList = json_decode($c['category'], true);

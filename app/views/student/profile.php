@@ -22,7 +22,7 @@
         <div class="row m20">
             <div class="form-group col-md-6">
                 <label for="">學校</label>
-                <input type="text" class="form-control" value="<?= $user['school'] ?>" readonly="">
+                <input type="text" class="form-control" value="<?= ($user['school'] == 'other') ? "其他" : $user['school'] ?>" readonly="">
             </div>
             <div class="form-group col-md-6">
                 <label for="">年級</label>

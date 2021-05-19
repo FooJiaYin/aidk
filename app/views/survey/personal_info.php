@@ -15,36 +15,30 @@
             </div>
             <div class="form-group">
                 <label for="">學校縣市</label>
-                <select class="form-control" id="city" onchange="filter('school', 'city', 'type')" required>
+                <select class="form-control" id="city" name="city" onchange="filter('school', 'city', 'type')" required>
                     <option value="">選擇學校縣市</option>
-                    <option value="taipei">台北</option>
-                    <option value="taoyuan">桃園</option>
-                    <option>新竹</option>
-                    <option value="taichung">台中</option>
-                    <option value="tainan">台南</option>
-                    <option>外島地區</option>
+                    <?php foreach ($cities as $city) : ?>
+                        <option value="<?= $city['city'] ?>"><?= ($city['city'] == 'other') ? "其他" : $city['city'] ?></option>
+                    <?php endforeach ?>
+                    <option value="other">其他</option>
                 </select>
             </div>
             <div class="form-group">
                 <label for="">學校立別</label>
-                <select class="form-control" id="type" onchange="filter('school', 'city', 'type')" required>
+                <select class="form-control" id="type" name="type" onchange="filter('school', 'city', 'type')" required>
                     <option value="">選擇學校立別</option>
-                    <option value="public">公立</option>
-                    <option value="private">私立</option>
+                    <?php foreach ($types as $type) : ?>
+                        <option value="<?= $type['type'] ?>"><?= ($type['type'] == 'other') ? "其他" : $type['type'] ?></option>
+                    <?php endforeach ?>                    
                 </select>
             </div>
             <div class="form-group">
                 <label for="">學校名稱</label>
                 <select class="form-control" id="school" name="school" required>
                     <option value="">選擇學校名稱</option>
-                    <option city="taipei" type="public">建國中學</option>
-                    <option city="taipei" type="public">北一女中</option>
-                    <option city="taipei" type="public">師大附中</option>
-                    <option city="taipei" type="public">中山女高</option>
-                    <option city="taoyuan" type="public">中山女高</option>
-                    <option city="taichung" type="public">台中一中</option>
-                    <option city="taichung" type="private">明道中學</option>
-                    <option city="tainan" type="public">台南一中</option>
+                    <?php foreach ($schools as $school) : ?>
+                        <option city="<?= $school['city'] ?>" type="<?= $school['type'] ?>" value="<?= $school['name'] ?>"><?= ($school['name'] == 'other') ? "其他" : $school['name'] ?></option>
+                    <?php endforeach ?>
                 </select>
             </div>
             <div class="form-group">

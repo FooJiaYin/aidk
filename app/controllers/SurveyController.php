@@ -6,6 +6,7 @@ use libraries\base\Controller;
 use libraries\base\Authorization as auth;
 
 use app\models\StudentModel;
+use app\models\SchoolModel;
 use app\models\SurveyModel;
 use app\models\LogModel;
 
@@ -14,6 +15,15 @@ class SurveyController extends Controller
     public function __construct($controller, $action)
     {
         parent::__construct($controller, $action);
+    }
+
+    public function assignSchools() {        
+        $cities = (new SchoolModel)->getDistinct('city');
+        $types = (new SchoolModel)->getDistinct('type');
+        $schools = (new SchoolModel)->fetchAll();
+        $this->assign('cities', $cities);             
+        $this->assign('types', $types);             
+        $this->assign('schools', $schools);  
     }
 
     public function index()
@@ -31,6 +41,8 @@ class SurveyController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['question_step'] = 0;
             $_SESSION['surv_email'] = $_POST['email'];
+            $_SESSION['surv_school_type'] = $_POST['type'];
+            $_SESSION['surv_school_city'] = $_POST['city'];
             $_SESSION['surv_school'] = $_POST['school'];
             $_SESSION['surv_grade'] = $_POST['grade'];
             header("Location: /survey/question/0/");
@@ -39,7 +51,8 @@ class SurveyController extends Controller
             $_SESSION['question_step'] = 0;
             header("Location: /survey/question/0/");
             exit();
-        } else {
+        } else {            
+            $this->assignSchools();         
             $this->render();
         }
     }
@@ -311,8 +324,8 @@ class SurveyController extends Controller
         $data['rawAns'] = json_encode($_SESSION['surv_ans']);
         $data['recCategories'] = json_encode($course_category);
         $data['score'] = json_encode($score);        
-        (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($data);
-        // return $data;
+        // (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($data);
+        return $data;
     }
 
     public function question($step = 1)
@@ -342,10 +355,11 @@ class SurveyController extends Controller
             }
             else {
                 if ((isset($_SESSION['isLogin']) && is_bool($_SESSION['isLogin']) && $_SESSION['isLogin'])) {
-                    $this->process_ans();
+                    $data = $this->process_ans();
+                    (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($data);
                     header("Location: /student/myScore/");
                 } else {
-                    $_SESSION['raw_ans'] = $raw_score;
+                    // $_SESSION['raw_ans'] = $raw_score;
                     header("Location: /survey/signup/");
                 }
                 exit();
@@ -391,6 +405,12 @@ class SurveyController extends Controller
             $user['address'] = $_POST['address'];
             $user['google_token'] = $_POST['google_token'];
             $user['fb_token'] = $_POST['fb_token'];
+            if (isset($_SESSION['surv_ans'])) {
+                $data = $this->process_ans();
+                $user['rawAns'] = $data['rawAns'];
+                $user['recCategories'] = $data['recCategories'];
+                $user['score'] = $data['score'];
+            }
             // if (isset($_SESSION['surv_score'])) {
             //     $user['score'] = $_SESSION['surv_score'];
             // } else {
@@ -403,11 +423,10 @@ class SurveyController extends Controller
             $account = $_POST['email'];
             if ($student && auth::doLogin($student, $_POST['password'])) {
                 (new LogModel)->writeLog("學生帳號註冊(帳號: $account)");                
-                if (isset($_SESSION['surv_score'])) {
-                    $this->process_ans();
-                    header("Location: /student/myScore/");
-                } else {
+                if (!$student['score'] || $student['score'] == "[0, 0, 0, 0, 0, 0]") {
                     header("Location: /student/profile/");
+                } else {
+                    header("Location: /student/myScore/");
                 }
             } else {
                 (new LogModel)->writeLog("學生帳號註冊失敗(帳號: $account, 異常操作)");
@@ -417,6 +436,7 @@ class SurveyController extends Controller
             exit();
         } else {
             //print_r($_SESSION);
+            $this->assignSchools();         
             $this->render();
         }
     }
@@ -482,9 +502,9 @@ class SurveyController extends Controller
             if (($_POST['loginBy'] == "web" && $student && auth::doLogin($student, $_POST['password'])) ||
                 (($_POST['loginBy'] == "FB" || $_POST['loginBy'] == "GOOGLE") && $student)
             ) {
-                // (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($user);
                 (new LogModel)->writeLog("學生登入(重新測驗)(帳號: $account)");
-                $this->process_ans();
+                $data = $this->process_ans();
+                (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($data);
                 header("Location: /student/myScore/");
                 // if ($user['score'] == "[0, 0, 0, 0, 0, 0]") 
                 //     header("Location: /student/profile/");
