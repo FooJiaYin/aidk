@@ -12,7 +12,7 @@ class SchoolModel extends Model
     public function getDistinct($column)
     {
         // $sql = "SELECT DISTINCT :column";
-        $sql = "SELECT DISTINCT " . $column . " FROM school";
+        $sql = "SELECT DISTINCT " . $column . " FROM school ORDER BY " . $column ." DESC";
         $sth = Db::pdo()->prepare($sql);
         // $sth = $this->formatParam($sth, [':column' => $column]);
         $sth->execute();

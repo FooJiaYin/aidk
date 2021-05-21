@@ -30,7 +30,7 @@ class CourseController extends Controller
 
     private function getQueryOrder() {
         if(!isset($_GET['order'])) {
-            $order = 'id';
+            $order = 'id DESC';
         }            
         else {
             $order = substr($_GET['order'], 0, -1);
@@ -116,7 +116,7 @@ class CourseController extends Controller
 
         $comments = (new CommentModel)->where(['course = :course'], [':course' => $id])->fetchAll();
 
-        $this->assignCourses($courses);  
+        $this->assign('course', $course);  
         $this->assign('chapter', $chapter);
         $this->assign('section', $section);
         $this->assign('video', $video);

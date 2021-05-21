@@ -24,8 +24,8 @@
                     "企業型 Enterprising",
                     "研究型 Investigative",
                     "事務型 Conventional ",
-                    "社交型 Social",
-                    "實作型 Realistic",
+                    "社會型 Social",
+                    "實用型 Realistic",
                     "藝術型 Artistic"
                 ],
                 datasets: [{
