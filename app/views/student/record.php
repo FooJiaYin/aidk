@@ -86,7 +86,7 @@
                     <tbody>
                         <?php if ($bougthCourses) : ?>
                             <?php foreach ($bougthCourses as $course) : ?>
-                                <tr style="cursor: pointer;" onclick="document.location = '/course/view/<?= $course['id'] ?>/';">
+                                <tr style="cursor: pointer;" onclick="document.location = '/course/view/<?= $course['course'] ?>/';">
                                     <th scope="row">
                                         <div class="marB10">課程購買日期: <?= date('Y/m/d', strtotime($course['bought_time'])) ?></div>
                                         <div class="media">

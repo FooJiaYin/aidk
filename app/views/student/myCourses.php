@@ -8,33 +8,34 @@
         <?php if ($courses) : ?>
             <?php foreach ($courses as $course) : ?>
                 <div class="col-6 col-xs-6 col-md-4 mb-4">
-                    <a href="/course/view/<?= $course['id'] ?>/">
-                        <div class="card h-100 border-dark rounded-0">
-                            <?php
-                            $path = "course_data/" . $course['id'] . "/img/";
-                            $imgs = array_diff(scandir($path), array('.', '..'));
-                            ?>
-                            <img src="/course_data/<?= $course['id'] ?>/img/<?= $imgs[2] ?>" class="card-img-top" alt="圖">
-                            <div class="card-body">
-                                <h5 class="mb-1">
-                                    <?php foreach ($course['category'] as $category) : ?>
-                                        <div class="card-body text-right">
-                                            <h5 class="mb-1">
-                                                <div class="card textC rounded-pill border-dark course_sort">
-                                                    <a href="/course/category/<?= $category ?>/">
-                                                        <?= COURSE_CATEGORY[$category] ?>
-                                                    </a>
-                                                </div>
-                                            </h5>
-                                            <!--<h5>$<?= $course['price'] ?></h5>-->
-                                        </div>
-                                    <?php endforeach ?>
-                                    <!-- <div class="card textC rounded-pill border-dark inBlock pl-4 pr-4"><?= COURSE_CATEGORY[$course['category']] ?></div> -->
-                                </h5>
-                                <h5 class="card-title"><?= $course['name'] ?></h5>
+                    <div class="card h-100 border-dark rounded-0" id="link_view" onclick="window.location = '/course/view/<?= $course['id'] ?>/';">
+                        <?php
+                        $path = "course_data/" . $course['id'] . "/img/";
+                        $imgs = array_diff(scandir($path), array('.', '..'));
+                        ?>
+                        <img src="/course_data/<?= $course['id'] ?>/img/<?= $imgs[2] ?>" class="card-img-top" alt="圖">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="card-body">
+                                    <h5 class="card-title"><?= $course['name'] ?></h5>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <?php foreach ($course['category'] as $category) : ?>
+                                    <div class="card-body text-right">
+                                        <h5 class="mb-1">
+                                            <div class="card textC rounded-pill border-dark course_order">
+                                                <a href="/course/category/<?= $category ?>/">
+                                                    <?= COURSE_CATEGORY[$category] ?>
+                                                </a>
+                                            </div>
+                                        </h5>
+                                        <!--<h5>$<?= $course['price'] ?></h5>-->
+                                    </div>
+                                <?php endforeach ?>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             <?php endforeach ?>
         <?php else : ?>
