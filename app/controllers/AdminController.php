@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\CourseModel;
+use app\models\CourseBoughtModel;
+use app\models\AssignmentModel;
 use app\models\StudentModel;
 use app\models\TeacherModel;
 use app\models\LogModel;
@@ -237,6 +239,35 @@ class AdminController extends Controller
             }
         } else {
             header("Location: /admin/courses/");
+        }
+    }
+
+    public function analysis($id = null) {
+        $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
+        if(isset($_SESSION['isLogin'])) {
+            if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher'])) {
+                $count = (new CourseModel)->getCourseStu($id);
+                $this->assign('course', $course);
+                $this->assign('count', $count);
+                $this->render();
+            }
+        }
+    }
+
+    public function hw($id = null) {
+        $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
+        $hwList = (new AssignmentModel)->where(['course = :course'], [':course' => $id])->fetchAll();
+        foreach ($hwList as $k => $hw) {
+            // $course = (new CourseModel)->where(['id = :id'], [':id' => $hw['course']])->fetch();
+            $student = (new StudentModel)->where(['id = :id'], [':id' => $hw['user']])->fetch();
+            $hwList[$k]['student_name'] = $student['name'];
+        }
+        if(isset($_SESSION['isLogin'])) {
+            if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher'])) {
+                $this->assign('hwList', $hwList);
+                $this->assign('course', $course['name']);
+                $this->render();
+            }
         }
     }
 

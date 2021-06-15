@@ -28,7 +28,14 @@
                             <div class="card-body text-right">
                                 <h5 class="mb-1">
                                     <div class="card textC rounded-pill border-dark course_sort">
-                                        <a href="/course/analysis/<?= $course['id'] ?>/">分析</a>
+                                        <a href="/teacher/analysis/<?= $course['id'] ?>/">分析</a>
+                                    </div>
+                                </h5>
+                            </div>
+                            <div class="card-body text-right">
+                                <h5 class="mb-1">
+                                    <div class="card textC rounded-pill border-dark course_sort">
+                                        <a href="/teacher/hw/<?= $course['id'] ?>/">作業</a>
                                     </div>
                                 </h5>
                             </div>

@@ -63,6 +63,8 @@
                     success: function(response) {
                         if (response == 1) {
                             alert("上傳完成！");
+                        } else if (response == 2) {
+                            alert("檔名不可超過20字元！");
                         } else {
                             alert("上傳失敗！");
                         }

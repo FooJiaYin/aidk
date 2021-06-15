@@ -11,7 +11,7 @@
             <div class="col-auto">
                 <form action=".">
                     <div class="btn-group" role="group" >
-                    <button type="submit" name="order" class="btn border-dark <?= (!isset($_GET['order']) || $_GET['order'] == 'idA') ? 'active' : '' ?>" value="idA">默認排序</button>
+                    <button type="submit" name="order" class="btn border-dark <?= (!isset($_GET['order']) || $_GET['order'] == 'idA') ? 'active' : '' ?>" value="idA">最舊</button>
                     <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'idD') ? 'active' : '' ?>" value="idD">最新</button>
                     <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'stuCountD') ? 'active' : '' ?>" value="stuCountD">熱門</button>
                     <button type="submit" name="order" class="btn border-dark <?= (isset($_GET['order']) && $_GET['order'] == 'priceA') ? 'active' : '' ?>" value="priceA">價格（低至高）</button>
@@ -45,10 +45,13 @@
                         <td>
                             <div class="row m10">
                                 <div class="col-6">
-                                    <a href="../courseEdit/<?= $course['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">修改</a>
+                                    <a href="../courseEdit/<?= $course['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">詳細資料</a>
                                 </div>
                                 <div class="col-6">
-                                    <a href="../../course/analysis/<?= $course['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">分析</a>
+                                    <a href="../../admin/analysis/<?= $course['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">分析</a>
+                                </div>
+                                <div class="col-6">
+                                    <a href="../../admin/hw/<?= $course['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">學生作業</a>
                                 </div>
                                 <div class="col-6">
                                     <a class="btn btn-outline btn-danger btn-block badge-pill del-course" style="color:#FFF;" data-id="<?= $course['id'] ?>" data-name="<?= $course['name'] ?>">刪除</a>

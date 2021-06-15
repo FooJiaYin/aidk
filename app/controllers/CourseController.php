@@ -9,6 +9,7 @@ use libraries\base\GenPDF;
 use app\models\StudentModel;
 use app\models\CourseModel;
 use app\models\CourseBoughtModel;
+use app\models\AssignmentModel;
 use app\models\CommentModel;
 use app\models\LogModel;
 
@@ -145,6 +146,24 @@ class CourseController extends Controller
         }
     }
 
+    public function hw($id = null) {
+        $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
+        $hwList = (new AssignmentModel)->where(['course = :course'], [':course' => $id])->fetchAll();
+        foreach ($hwList as $k => $hw) {
+            // $course = (new CourseModel)->where(['id = :id'], [':id' => $hw['course']])->fetch();
+            $student = (new StudentModel)->where(['id = :id'], [':id' => $hw['user']])->fetch();
+            $hwList[$k]['student_name'] = $student['name'];
+        }
+        if(isset($_SESSION['isLogin'])) {
+            if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher'])) {
+                $count = (new CourseModel)->getCourseStu($id);
+                $this->assign('hwList', $hwList);
+                $this->assign('course', $course['name']);
+                $this->render();
+            }
+        }
+    }
+
     public function buy($courseID = null)
     {
         auth::checkAuth();
@@ -226,18 +245,31 @@ class CourseController extends Controller
             $isBought = (new CourseBoughtModel)->where(['course = :course', 'AND', 'user = :user'], [':course' => $courseID, ':user' => $_SESSION['id']])->fetch();
             if ($isBought && !$isBought['hw_uploaded']) {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['hw'])) {
-                    $filename = explode('.', $_FILES['hw']['name']);
-                    $file_ext = end($filename);
-                    $filename = $courseID . "_" . $_SESSION['id'] . "_" . time() . "." . $file_ext;
-                    if (move_uploaded_file($_FILES['hw']['tmp_name'], "course_data/$courseID/hw/$filename")) {
-                        $data['hw_uploaded'] = true;
-                        $data['hw_file'] = $filename;
-                        (new CourseBoughtModel)->where(['course = :course', 'AND', 'user = :user'], [':course' => $courseID, ':user' => $_SESSION['id']])->update($data);
-                        (new LogModel)->writeLog("作業上傳(課程ID: $courseID)");
-                        echo "1";
+                    if(strlen($_FILES['hw']['name']) <= 20) {
+                        $filename = explode('.', $_FILES['hw']['name']);
+                        $file_ext = end($filename);
+                        // $filename = $courseID . "_" . $stu['name'] . "_" . date("Ymd") . "." . $file_ext;
+                        $hw = [
+                            'name' => $_FILES['hw']['name'],
+                            'user' => $_SESSION['id'],
+                            'course' => $courseID,
+                            'comment' => ""
+                        ];
+                        $hwId = (new AssignmentModel)->add($hw, true);
+                        $filename = $courseID . "_" . $_SESSION['id'] . "_" . $hwId . "." . $file_ext;
+                        if (move_uploaded_file($_FILES['hw']['tmp_name'], "course_data/$courseID/hw/$filename")) {
+                            $data['hw_uploaded'] = true;
+                            $data['hw_file'] = $filename;
+                            (new CourseBoughtModel)->where(['course = :course', 'AND', 'user = :user'], [':course' => $courseID, ':user' => $_SESSION['id']])->update($data);  
+                            (new LogModel)->writeLog("作業上傳(課程ID: $courseID)");
+                            echo "1";
+                        } else {
+                            (new AssignmentModel)->delete($hwId);
+                            (new LogModel)->writeLog("作業上傳(課程ID: $courseID, 檔案寫入失敗)");
+                            echo "0";
+                        }
                     } else {
-                        (new LogModel)->writeLog("作業上傳(課程ID: $courseID, 檔案寫入失敗)");
-                        echo "0";
+                        echo "2";
                     }
                 } else {
                     $this->assign('courseID', $courseID);
