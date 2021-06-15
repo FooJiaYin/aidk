@@ -14,12 +14,29 @@
         </div>
     </div>
 
-    <div class="titleJL marT30 marB0">
-        <h1>基本資料</h1>
+    <div class="titleJL marT30 marB0 row">
+        <h1 class="col-auto">基本資料</h1>        
+        <?php if (!isset($_GET['editPassword'])) : ?>
+        <a href="/student/profileEdit/?editPassword"><div class="btnJL" style="width:fit-content;">更改密碼</div></a>    
+        <?php endif ?>
     </div>
 
     <form id="course_form" action="." method="POST">
-        <div class="row m20">
+        <div class="row m20" style="clear:both;">
+            <?php if (isset($_GET['editPassword'])) : ?>
+                <label class="col-12" for="">更改密碼</label><br>
+                <div class="form-group col-md-4">
+                    <input type="password" class="form-control" name="password_old" id="password_old" placeholder="舊密碼" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <!-- <label for="">新密碼</label> -->
+                    <input type="password" class="form-control" name="password_new" id="password_new" placeholder="新密碼" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <!-- <label for="">再次輸入新密碼</label> -->
+                    <input type="password" class="form-control" placeholder="再次輸入新密碼" id="password_confirm" oninput="check(this, 'password_new')" required>
+                </div>
+            <?php else : ?>
             
             <div class="form-group col-6 col-md-2">
                 <label for="">學校縣市</label>
@@ -72,8 +89,10 @@
                 <label for="">住址</label>
                 <input type="text" name="address" class="form-control" value="<?= $user['address'] ?>" required="">
             </div>
+        <?php endif ?>
         </div>
         <button type="submit" class="btn btn-lg btn-primary">確認修改</button>
+        <a href="/student/profile/" class="btn btn-lg btn-secondary">放棄修改</a>
     </form>
 
 </div>

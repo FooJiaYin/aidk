@@ -386,52 +386,56 @@ class SurveyController extends Controller
         // if (isset($_GET['debug'])) $_SESSION['surv_score'] = "[20, 30, 40, 50, 60, 70]";
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userCheck = (new StudentModel)->where(['account = :account'], [':account' => $_POST['email']])->count();
-            if ($userCheck) {
-                if (isset($_POST['nologin'])) {
-                    header("Location: /survey/signup/?alert=1&msg=信箱重複&redirect=/survey/signup/?nologin");
-                } else {
-                    header("Location: /survey/signup/?alert=1&msg=信箱重複");
-                }
-                exit();
-            }
-            $user['account'] = $_POST['email'];
-            $user['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $user['name'] = $_POST['name'];
-            $user['gender'] = $_POST['gender'];
-            $user['school'] = $_POST['school'];
-            $user['grade'] = $_POST['grade'];
-            $user['birthday'] = $_POST['birthday'];
-            $user['phone'] = $_POST['phone'];
-            $user['address'] = $_POST['address'];
-            $user['google_token'] = $_POST['google_token'];
-            $user['fb_token'] = $_POST['fb_token'];
-            if (isset($_SESSION['surv_ans'])) {
-                $data = $this->process_ans();
-                $user['rawAns'] = $data['rawAns'];
-                $user['recCategories'] = $data['recCategories'];
-                $user['score'] = $data['score'];
-            }
-            // if (isset($_SESSION['surv_score'])) {
-            //     $user['score'] = $_SESSION['surv_score'];
-            // } else {
-            //     $user['score'] = "[0, 0, 0, 0, 0, 0]";
+            // if ($userCheck) {
+            //     if (isset($_POST['nologin'])) {
+            //         header("Location: /survey/signup/?alert=1&msg=信箱重複&redirect=/survey/signup/?nologin");
+            //     } else {
+            //         header("Location: /survey/signup/?alert=1&msg=信箱重複");
+            //     }
+            //     exit();
             // }
-            (new StudentModel)->add($user);
+            if (!$userCheck && $_POST['birthday']) {
+                $user['account'] = $_POST['email'];
+                $user['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $user['name'] = $_POST['name'];
+                $user['gender'] = $_POST['gender'];
+                $user['school'] = $_POST['school'];
+                $user['grade'] = $_POST['grade'];
+                $user['birthday'] = $_POST['birthday'];
+                $user['phone'] = $_POST['phone'];
+                $user['address'] = $_POST['address'];
+                $user['google_token'] = $_POST['google_token'];
+                $user['fb_token'] = $_POST['fb_token'];
+                if (isset($_SESSION['surv_ans'])) {
+                    $data = $this->process_ans();
+                    $user['rawAns'] = $data['rawAns'];
+                    $user['recCategories'] = $data['recCategories'];
+                    $user['score'] = $data['score'];
+                }
+                // if (isset($_SESSION['surv_score'])) {
+                //     $user['score'] = $_SESSION['surv_score'];
+                // } else {
+                //     $user['score'] = "[0, 0, 0, 0, 0, 0]";
+                // }
+                (new StudentModel)->add($user);
+            }
 
             $student = (new StudentModel)->where(['account = :account'], [':account' => $_POST['email']])->fetch();
 
             $account = $_POST['email'];
             if ($student && auth::doLogin($student, $_POST['password'])) {
-                (new LogModel)->writeLog("學生帳號註冊(帳號: $account)");                
-                if (!$student['score'] || $student['score'] == "[0, 0, 0, 0, 0, 0]") {
+                (new LogModel)->writeLog("學生帳號註冊(帳號: $account)"); 
+                if ($userCheck) {
+                    header("Location: /");
+                } else if (!$student['score'] || $student['score'] == "[0, 0, 0, 0, 0, 0]") {
                     header("Location: /student/profile/");
                 } else {
                     header("Location: /student/myScore/");
                 }
             } else {
-                (new LogModel)->writeLog("學生帳號註冊失敗(帳號: $account, 異常操作)");
+                // (new LogModel)->writeLog("學生帳號註冊失敗(帳號: $account, 異常操作)");
                 //print_r($user);
-                header("Location: /");
+                header("Location: /survey/signup/?error");
             }
             exit();
         } else {
@@ -453,11 +457,17 @@ class SurveyController extends Controller
             } else if ($loginBy == "GOOGLE") {
                 $student = (new StudentModel)->where(['account = :account'], [':account' => $email])->fetch();
             } else {
-                $student = false;
+                $student = null;
             }
 
             if ($student) {
                 $loginCheck = false;
+                $_SESSION['isLogin'] = true;
+                $_SESSION['id'] = $student['id'];
+                $_SESSION['account'] = $student['account'];
+                $_SESSION['loginType'] = 1;
+                // $loginCheck = true;
+                (new LogModel)->writeLog("學生登入(社群登入)(信箱: $email ,來源: $loginBy)");
             } else {
                 $loginCheck = true;
             }

@@ -36,6 +36,7 @@
                     console.log("Signed in: " + googleUser.getBasicProfile().getEmail());
                     var token = googleUser.getBasicProfile().getId();
                     var email = googleUser.getBasicProfile().getEmail();
+                    var name = googleUser.getBasicProfile().getName();
                     snsLogin("GOOGLE", token, email);
                 },
                 function(error) {
@@ -97,6 +98,7 @@
                     $("#password").attr("placeholder", "此密碼用於直接使用email登入，非社群帳號密碼");
                     $("#login_form").hide();
                     $(".snsSignup").hide();
+                    show_signup();
                     $(".snsSignup2").show();
                     if (loginBy == "GOOGLE") {
                         $("#google_token").val(token);
@@ -106,7 +108,8 @@
                         //alert("FB!");
                     }
                 } else {
-                    alert("Email帳號已存在或該社群帳號已連動，請直接使用對應的社群連結登入！");
+                    window.location.replace("/");
+                    // alert("Email帳號已存在或該社群帳號已連動，請直接使用對應的社群連結登入！");
                 }
             });
     }
@@ -193,6 +196,30 @@
         $("#" + target).find("option"+filters).show();
         // $('option').not("[filter*='taichung']", value).hide();
     }
+
+    
+    $("#signup_info").hide();
+    $("#signup_info input, #signup_info select").attr('required', false);
+    <?php if (isset($_SESSION['surv_email'])): ?>
+        show_signup();
+    <?php endif ?>
+
+    function show_signup() {         
+        $('#title, b').each(function () {
+            $(this).html($(this).html().replace('登入', '註冊'));
+        });
+        $("#login_info").hide();
+        $("#signup_info").show();
+        $("#signup_info input, #signup_info select").attr('required', true);
+    }
+
+    function forget_password() {
+        if (confirm("是否重置密碼？")) {
+            // alert("密碼已重置，請前往註冊信箱查看。");
+            window.location.replace('/student/resetPassword/');
+        } 
+    }
+    
 </script>
 <?php if (isset($_GET['alert']) && $_GET['alert'] == '1') : ?>
     <script>

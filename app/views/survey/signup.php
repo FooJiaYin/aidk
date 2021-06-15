@@ -5,25 +5,43 @@
             <div class="boxBor">
 
                 <div class="titleJL">
-                    <h1>註冊</h1>
+                    <h1 id="title">登入</h1>
                 </div>
 
                 <div class="row">
-
+                    
+                <b class="col-12 textC marB10 snsSignup">以社群帳號登錄登入</b>
                     <div class="col-12 snsSignup">
                         <a id="FBSignup" data-do="signup" class="btnJL fb" href="#">Facebook</a>
                         <a id="GSignup" data-do="signup" class="btnJL google" href="#">Google</a>
                     </div>
-                    <b class="col-12 textC marB10 snsSignup">或</b>
+                    <b class="col-12 textC marB10 snsSignup">或直接以電子信箱登入</b>
                     <b class="col-12 textC marB10 snsSignup2" style="display: none;">社群帳號已連動，請完成以下資訊建立帳號！</b>
-
+                    
+                    
                     <div class="col-12">
+                        <div class="col-12 marB10 text-center alert alert-danger <?= (isset($_GET['error'])) ? 'd-block' : 'd-none' ?>" style="color: red">帳號或密碼錯誤！</div>
                         <div class="form-group">
                             <input type="email" class="form-control" id="signup_email" name="email" placeholder="信箱" value="<?= (isset($_SESSION['surv_email'])) ? $_SESSION['surv_email'] : '' ?>" required>
                         </div>
                         <div class="form-group">
                             <input type="password" class="form-control" name="password" id="password" placeholder="密碼" required>
                         </div>
+                        <div class="form-group">
+                            <label class="check_style">我已詳閱並同意《<a data-toggle="modal" data-target="#exampleModalCenter"><u>
+                                        使用條文</u></a>》
+                                <input type="checkbox" checked required>
+                                <span class="check_checkmark"></span>
+                            </label>
+                        </div>
+                        <div id="login_info">
+                        <button type="submit" class="btnJL">確認</button>
+
+                        <div class="col-12 text-right marB10"><a onclick="forget_password()"><u>忘記密碼?</u></a></div>
+
+                        <div class="col-12 textC marT10 marB10">還沒有帳號嗎? <a onclick="show_signup()"><u>立即註冊</u></a></div>
+                    </div>
+                    <div id="signup_info">
                         <div class="form-group">
                             <input type="password" class="form-control" placeholder="再次輸入密碼" id="password_confirm" oninput="check(this)" required>
                         </div>
@@ -101,7 +119,7 @@
                         <?php endif ?>
 
                         <button type="submit" class="btnJL">註冊</button>
-
+                        </div>
                     </div>
 
                     <div class="clearfix"></div>
@@ -110,7 +128,7 @@
 
             </div>
         </form>
-        <?php if (!isset($_GET['nologin'])) : ?>
+        <!-- <?php if (!isset($_GET['nologin'])) : ?>
             <form id="login_form" action="/survey/survey_login/" method="POST" class="col-12 col-md-12 col-lg-6 align-items-stretch loginBox">
                 <div class="boxBor">
 
@@ -144,7 +162,7 @@
 
                 </div>
             </form>
-        <?php endif ?>
+        <?php endif ?> -->
     </div>
 
 </div>

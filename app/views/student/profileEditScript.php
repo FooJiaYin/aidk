@@ -1,6 +1,14 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script language='javascript'>
+<script language='javascript'>    
+    function check(input, password) {
+        if (input.value != document.getElementById(password).value) {
+            input.setCustomValidity('兩次密碼不相符！');
+        } else {
+            // input is valid -- reset the error message
+            input.setCustomValidity('');
+        }
+    }
     $(function() {
         $("#birthday").datepicker({
             changeMonth: true,

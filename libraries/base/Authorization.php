@@ -62,7 +62,7 @@ class Authorization
     public static function checkAuth($isRedirect = true, $isTeacher = false)
     {
         if ($isRedirect) {
-            if ($isTeacher == 'ADMIN' && (!$_SESSION['isLogin'] || $_SESSION['loginType'] != 3)) {
+            if ($isTeacher == 'ADMIN' && (!isset($_SESSION['isLogin']) || !$_SESSION['isLogin'] || $_SESSION['loginType'] != 3)) {
                 header("Location: /admin/login/");
             }
         }

@@ -21,6 +21,7 @@
                 console.log("Signed in: " + googleUser.getBasicProfile().getEmail());
                 var token = googleUser.getBasicProfile().getId();
                 var email = googleUser.getBasicProfile().getEmail();
+                var name = googleUser.getBasicProfile().getName();
                 snsLogin("GOOGLE", token, email);
             },
             function(error) {
@@ -69,8 +70,24 @@
             }).then((result) => {
                 if (result.result)
                     window.location.replace("/");
-                else
-                    alert("帳號尚未連結或者非使用此社群網註冊，請選擇正確的社群入口進行登入！");
+                else {
+                    // window.location.replace("/survey/signup?nologin");
+                    // alert("帳號尚未連結或者非使用此社群網註冊，請選擇正確的社群入口進行登入！");
+                    $("#signup_email").val(email).attr("readonly", "readonly");
+                    $("#signup_name").val(name);
+                    // $("#password").attr("placeholder", "此密碼用於直接使用email登入，非社群帳號密碼");
+                    // $("#signup-form").show();
+                    // $("#login-form").hide();
+                    // $(".snsSignup").hide();
+                    // $(".snsSignup2").show();
+                    // if (loginBy == "GOOGLE") {
+                    //     $("#google_token").val(token);
+                    //     //alert("GOOGLE!");
+                    // } else if (loginBy == "FB") {
+                    //     $("#fb_token").val(token);
+                    //     //alert("FB!");
+                    // }
+                }
             });
     }
 
@@ -101,6 +118,13 @@
             }
         });
     });
+
+    function forget_password() {
+        if (confirm("是否重置密碼？")) {
+            // alert("密碼已重置，請前往註冊信箱查看。");
+            window.location.replace('/student/resetPassword/');
+        } 
+    }
 
     $(function() {
         startApp();

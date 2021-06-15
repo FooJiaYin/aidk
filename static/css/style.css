@@ -389,7 +389,7 @@ select:invalid { color: #777; }
   background: #ccc;
 }
 .loginBox{
-	width: 70%;
+	/* width: 70%; */
 	margin: 0 auto;
 	display: table;
 	background: #fff;

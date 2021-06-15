@@ -49,7 +49,10 @@
                 <input type="text" class="form-control" value="<?= $user['address'] ?>" readonly="">
             </div>
         </div>
-        <div class="btnJL" style="width:fit-content"><a href="/student/profileEdit/">修改資料</a></div>
+        <div class="row">
+            <div class="btnJL" style="width:fit-content"><a href="/student/profileEdit/">修改資料</a></div>
+            <div class="btnJL" style="width:fit-content"><a href="/student/profileEdit/?editPassword">更改密碼</a></div>
+        </div>  
     </form>
 
 </div>

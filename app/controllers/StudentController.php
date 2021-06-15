@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use libraries\base\Controller;
 use libraries\base\Authorization as auth;
+use libraries\vendor\PHPMailer\PHPMailer;
+use libraries\vendor\PHPMailer\Exception;
 
 use app\models\StudentModel;
 use app\models\CourseModel;
@@ -63,12 +65,79 @@ class StudentController extends Controller
                 header("Location: /");
             } else {
                 (new LogModel)->writeLog("學生登入失敗(帳號: $account, 帳密錯誤)");
-                header("Location: /student/login/");
+                header("Location: /student/login/?error");
             }
             exit();
         } else {
             $this->render();
         }
+    }
+
+    function randomPassword($length = 8) {
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $count = mb_strlen($chars);
+    
+        for ($i = 0, $result = ''; $i < $length; $i++) {
+            $index = rand(0, $count - 1);
+            $result .= mb_substr($chars, $index, 1);
+        }
+    
+        return $result;
+    }
+
+    public function resetPassword() // $recipient, $content)
+    {
+        ini_set("SMTP","ssl://smtp.gmail.com");
+        ini_set("smtp_port","465");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['account'];
+            $userCheck = (new StudentModel)->where(['account = :account'], [':account' => $email])->count();
+            if(!$userCheck) {
+                echo '<script>alert("此帳號尚未注冊");</script>';
+            } else {
+                $newPassword = $this->randomPassword(8);
+                (new StudentModel)->where(['account = :account'], [':account' => $email])->update([
+                    'password' => password_hash($newPassword, PASSWORD_DEFAULT)
+                ]);
+                $mail = new PHPMailer(true);
+                try {
+                    //Server settings
+                    $mail->isSMTP();                                      // Set mailer to use SMTP
+                    $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+                    $mail->SMTPAuth = true;                               // Enable SMTP authentication
+                    $mail->Username = 'aidk.service@gmail.com';                 // SMTP username
+                    $mail->Password = 'service4aidk';                           // SMTP password
+                    $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+                    $mail->Port = 465;                                    // TCP port to connect to
+                    $mail->CharSet = "utf-8";
+                    $mail->SMTPOptions = array(
+                        'ssl' => array(
+                            'verify_peer' => false,
+                            'verify_peer_name' => false,
+                            'allow_self_signed' => true
+                        )
+                    );
+    
+                    //Recipients
+                    $mail->setFrom('aidk.service@gmail.com', 'AIDK');
+                    $mail->addAddress($email);     // Add a recipient
+    
+                    //Content
+                    $mail->isHTML(true);                                  // Set email format to HTML
+                    $mail->Subject = "AIDK密碼重置";
+                    $mail->Body    = "您已經成功重置密碼，請用以下密碼登入：" . $newPassword;
+    
+                    $mail->send();
+    
+                    echo '<script>alert("您已經成功重置密碼，請前往信箱確認。");
+                    window.location.href="/survey/signup/";</script>';
+                } catch (Exception $e) {
+                    echo 'Message could not be sent.';
+                    echo 'Mailer Error: ' . $mail->ErrorInfo;
+                }   
+            }
+        }      
+        $this->render();
     }
 
     // 社群登入介面
@@ -96,7 +165,8 @@ class StudentController extends Controller
                 (new LogModel)->writeLog("學生登入(社群登入)(信箱: $email ,來源: $loginBy)");
             } else {
                 $loginCheck = false;
-                (new LogModel)->writeLog("學生登入失敗(社群登入)(信箱: $email ,來源: $loginBy)");
+                $_GET['first'] = true;
+                (new LogModel)->writeLog("學生註冊(社群登入)(信箱: $email ,來源: $loginBy)");
             }
 
             $result = [
@@ -129,21 +199,37 @@ class StudentController extends Controller
     public function profileEdit()
     {
         if(auth::checkAuth()) {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {                
-                $stu = [
-                    // 'name' => $_POST['name'],
-                    'gender' => $_POST['gender'],
-                    'account' => $_POST['account'],
-                    // 'credit' => $_POST['credit'],
-                    'school' => $_POST['school'],
-                    'grade' => $_POST['grade'],
-                    'birthday' => $_POST['birthday'],
-                    'phone' => $_POST['phone'],
-                    'address' => $_POST['address'],
-                ];
-                (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($stu);
-                (new LogModel)->writeLog("修改學生資料(學生ID)");
-                header("Location: /student/profile/");
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {     
+                if(isset($_POST['password_old']) && $_POST['password_old'] != '') {
+                    $student = (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->fetch();
+                    if (password_verify($_POST['password_old'], $student['password'])) {                        
+                        (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update([
+                            'password' => password_hash($_POST['password_new'], PASSWORD_DEFAULT)
+                        ]);
+                        echo '<script>alert("成功修改密碼");
+                        window.location.href="/student/profile/";</script>';
+                    } else {
+                        echo '<script>alert("舊密碼輸入錯誤");
+                        window.location.href="/student/profileEdit/?editPassword";</script>';
+                    }
+                }      
+                // echo '<script>alert("成功修改密碼");</script>';
+                else {
+                    $stu = [
+                        // 'name' => $_POST['name'],
+                        'gender' => $_POST['gender'],
+                        'account' => $_POST['account'],
+                        // 'credit' => $_POST['credit'],
+                        'school' => $_POST['school'],
+                        'grade' => $_POST['grade'],
+                        'birthday' => $_POST['birthday'],
+                        'phone' => $_POST['phone'],
+                        'address' => $_POST['address'],
+                    ];
+                    (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update($stu);
+                    (new LogModel)->writeLog("修改學生資料(學生ID)");
+                    header("Location: /student/profile/");
+                }
             } else {
                 $this->assignSchools();  
                 $this->render();
@@ -244,16 +330,22 @@ class StudentController extends Controller
         $transactions = (new TransactionModel)->where(['user = :user'], [':user' => $_SESSION['id']])->fetchAll();
 
         $bougthCourses = (new CourseBoughtModel)->where(['user = :user'], [':user' => $_SESSION['id']])->fetchAll();
-
         $this->assign('transactions', $transactions);
         $this->assign('bougthCourses', $bougthCourses);
         $this->render();
     }
-
+        
     public function myCourses()
     {
         auth::checkAuth();
-
+        
+        // $bougthCourses = (new CourseBoughtModel)->where(['user = :user'], [':user' => $_SESSION['id']])->fetchAll();
+        // $courses = [];
+        // foreach ($bougthCourses as $k => $c) {
+        //     $course = (new CourseModel)->where(['id = :id'], [':id' => $c['course']])->fetch();
+        //     $courses[] = $course;
+        //     // array_push($courses, $course);
+        // }
         $courses = (new CourseModel)->getStuCourses();
         foreach ($courses as $k => $c) {
             $categoryList = json_decode($c['category'], true);
@@ -308,5 +400,10 @@ class StudentController extends Controller
             header("Location: /");
         }
         exit();
+    }
+
+    public function privacyPolicy() 
+    {
+        $this->render();
     }
 }

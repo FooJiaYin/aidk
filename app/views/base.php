@@ -128,15 +128,10 @@
                             </ul>
                         </li>
                     <?php endif ?>
-                <?php else : ?>
-                    <li>
-                        <a href="/survey/signup/?nologin">註冊</a>
-                    </li>
-                    
-                    <li class="dropdown">
-                        <a href="#!">登入</a>
+                <?php else : ?><li class="dropdown">
+                        <a href="#!">註冊/登入</a>
                         <ul class="dropmenu">
-                            <li><a class="dropdown-item" href="/student/login/">學生登入</a></li>
+                            <li><a class="dropdown-item" href="/survey/signup/">學生註冊/登入</a></li>
                             <li><a class="dropdown-item" href="/teacher/login/">教師登入</a></li>
                         </ul>
                     </li>
