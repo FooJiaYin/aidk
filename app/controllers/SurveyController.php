@@ -334,13 +334,14 @@ class SurveyController extends Controller
         //     header("Location: /survey/personal_info/");
         // }
         if(!isset($_SESSION['question_order']) || $step == '0') {
+            $_SESSION['question_step'] = 1;
             $order = range(1, 48);
             shuffle($order);
             $_SESSION['question_order'] = $order;
         }
         if (!isset($_SESSION['question_step']) || $step == '0') {
             $_SESSION['question_step'] = 1;
-            header("Location: /survey/question/");
+            header("Location: /survey/question/1/");
             exit();
         }
         $qid = $_SESSION['question_order'][$step-1];
@@ -364,16 +365,10 @@ class SurveyController extends Controller
                 }
                 exit();
             }
-        } else {
-            // $question_step = $_SESSION['question_step'];
-            // if ($id == $question_step) {
-            //     $question = (new SurveyModel)->where(['id = :id'], [':id' => $_SESSION['question_order'][$id-1]])->fetch();
-            //     $this->assign('question', $question); 
-            //     $this->render();
-            // } else {
-            //     header("Location: /survey/question/$question_step/");
-            // }
-            // exit();
+        } 
+        $question_step = $_SESSION['question_step'];
+        if ($step > $question_step && $step > 1) {
+            header("Location: /survey/question/$question_step/");
         }
         $question = (new SurveyModel)->where(['id = :id'], [':id' => $qid])->fetch();
         $this->assign('step', $step); 
