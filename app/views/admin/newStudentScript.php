@@ -6,6 +6,7 @@
             changeMonth: true,
             changeYear: true,
             showMonthAfterYear : true,
+            yearRange: "-100:+0",
             dateFormat: 'yy-mm-dd'
         });
     });

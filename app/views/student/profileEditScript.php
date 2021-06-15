@@ -14,7 +14,7 @@
             changeMonth: true,
             changeYear: true,
             showMonthAfterYear : true,
-            yearRange: "-23:+0",
+            yearRange: "-100:+0",
             dateFormat: 'yy-mm-dd'
         });
     });
