@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\CourseModel;
+use app\models\TransactionModel;
 use app\models\CourseBoughtModel;
 use app\models\AssignmentModel;
 use app\models\StudentModel;
@@ -216,6 +217,10 @@ class AdminController extends Controller
                 //     if($i < $N-1) $categoryStr .= ", ";
                 // }
                 // $categoryStr .= "]";
+                $redirectPath = "/admin/courses/";
+                if(isset($_POST['redirect'])) {
+                    $redirectPath = $_POST['redirect'];
+                }
                 $categoryStr = json_encode($_POST['category']);
                 $course = [
                     'name' => $_POST['name'],
@@ -227,10 +232,10 @@ class AdminController extends Controller
                 ];
                 (new CourseModel)->where(['id = :id'], [':id' => $id])->update($course);
                 (new LogModel)->writeLog("修改課程資料(課程ID: $id)");
-                header("Location: /admin/courses/");
+                header("Location: " . $redirectPath);
             } else {
                 $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
-                if(! $course) header("Location: /admin/courses/");
+                if(! $course) header("Location: " . $redirectPath);
                 $teachers = (new TeacherModel)->fetchAll();
                 $course['category'] = json_decode($course['category'], true);
                 $this->assign('course', $course);
@@ -238,7 +243,7 @@ class AdminController extends Controller
                 $this->render();
             }
         } else {
-            header("Location: /admin/courses/");
+            header("Location: " . $redirectPath);
         }
     }
 
@@ -336,7 +341,7 @@ class AdminController extends Controller
         }
     }
 
-    public function studentEdit($id = null)
+    public function studentInfo($id = null)
     {
         auth::checkAuth(true, 'ADMIN');
 
@@ -357,20 +362,32 @@ class AdminController extends Controller
                         'name' => $_POST['name'],
                         'gender' => $_POST['gender'],
                         'account' => $_POST['account'],
-                        'credit' => $_POST['credit'],
+                        // 'credit' => $_POST['credit'],
                         'school' => $_POST['school'],
                         'grade' => $_POST['grade'],
                         'birthday' => $_POST['birthday'],
                         'phone' => $_POST['phone'],
-                        'address' => $_POST['address'],
+                        'address' => $_POST['address']
                     ];
                     (new StudentModel)->where(['id = :id'], [':id' => $id])->update($stu);
                     (new LogModel)->writeLog("修改學生資料(學生ID: $id)");
                     header("Location: /admin/students/");
                 }
             } else {
+                /* Basic Info */
                 $stu = (new StudentModel)->where(['id = :id'], [':id' => $id])->fetch();
                 $this->assign('stu', $stu);
+
+                /* Records */
+                $transactions = (new TransactionModel)->where(['user = :user'], [':user' => $id])->fetchAll();
+                $bougthCourses = (new CourseBoughtModel)->where(['user = :user'], [':user' => $id])->fetchAll();
+                $this->assign('transactions', $transactions);
+                $this->assign('bougthCourses', $bougthCourses);
+
+                /* Logs */
+                $logs = (new LogModel)->where(['user = :user', 'AND', 'type = :type'], [':user' => $id, ':type' => 1])->order([$this->getQueryOrder()])->fetchAll();
+                $this->assign('logs', $logs);
+
                 $this->render();
             }
         } else {
@@ -426,7 +443,7 @@ class AdminController extends Controller
         }
     }
 
-    public function teacherEdit($id = null)
+    public function teacherInfo($id = null)
     {
         auth::checkAuth(true, 'ADMIN');
 
@@ -441,8 +458,26 @@ class AdminController extends Controller
                 (new LogModel)->writeLog("修改老師資料(老師ID: $id)");
                 header("Location: /admin/teachers/");
             } else {
+                /* Basic Info */
                 $teacher = (new TeacherModel)->where(['id = :id'], [':id' => $id])->fetch();
                 $this->assign('teacher', $teacher);
+
+                /* Courses */                
+                $courseList = (new CourseModel)->where(['teacher = :teacher'], [':teacher' => $id])->fetchAll();
+                $this->assign('courseList', $courseList);
+
+                /* Analysis */
+                // foreach($courseList as $k => $course) {
+                //     $courseList[$k][] = (new CourseModel)->getCourseStu($id);
+                //     $this->assign('course', $course);
+                //     $this->assign('count', $count);
+                //     $this->render();
+                // }
+
+                /* Logs */
+                $logs = (new LogModel)->where(['user = :user', 'AND', 'type = :type'], [':user' => $id, ':type' => 2])->order([$this->getQueryOrder()])->fetchAll();
+                $this->assign('logs', $logs);
+
                 $this->render();
             }
         } else {

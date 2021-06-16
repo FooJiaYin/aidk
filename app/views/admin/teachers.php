@@ -25,10 +25,10 @@
 
             <thead>
                 <tr>
-                    <th scope="col" width="18%">老師ID</th>
+                    <th scope="col" width="30%">老師ID</th>
                     <th scope="col">老師姓名</th>
-                    <th scope="col">課程列表</th>
-                    <th scope="col" class="widthMax">功能</th><!-- 20201128 修改 class加上 -->
+                    <!-- <th scope="col">課程列表</th> -->
+                    <th scope="col" width="40%">功能</th><!-- 20201128 修改 class加上 -->
                 </tr>
             </thead>
             <tbody>
@@ -36,16 +36,16 @@
                     <tr class="alert alert-dismissible fade show" role="alert">
                         <th scope="row"><?= $teacher['account'] ?></th>
                         <th scope="row"><?= $teacher['name'] ?></th>
-                        <th scope="row"><?= $teacher['courses'] ?></th>
+                        <!-- <th scope="row"><?= $teacher['courses'] ?></th> -->
                         <td>
                             <div class="row m10">
-                                <div class="col-12">
-                                    <a href="/admin/teacherEdit/<?= $teacher['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">查看與變更老師個人檔案</a>
-                                </div>
                                 <div class="col-6">
+                                    <a href="/admin/teacherInfo/<?= $teacher['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">詳細資料</a>
+                                </div>
+                                <div class="col-3">
                                     <button class="btn btn-outline-dark btn-block badge-pill reset-user" data-id="<?= $teacher['id'] ?>" data-name="<?= $teacher['name'] ?>">重置</button>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-3">
                                     <a class="btn btn-outline btn-danger btn-block badge-pill del-user" style="color:#FFF;" data-id="<?= $teacher['id'] ?>" data-name="<?= $teacher['name'] ?>">刪除</a>
                                 </div>
                             </div>

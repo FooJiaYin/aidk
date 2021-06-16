@@ -42,7 +42,7 @@
                         <td>
                             <div class="row m10">
                                 <div class="col-4">
-                                    <a href="/admin/studentEdit/<?= $stu['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">修改</a>
+                                    <a href="/admin/studentInfo/<?= $stu['id'] ?>/" class="btn btn-outline-dark btn-block badge-pill">詳細資料</a>
                                 </div>
                                 <div class="col-4">
                                     <button class="btn btn-outline-dark btn-block badge-pill reset-user" data-id="<?= $stu['id'] ?>" data-name="<?= $stu['name'] ?>">重置</button>

@@ -1,10 +1,28 @@
+<?php if (isset($_GET['teacher'])) : ?>
+<div class="tabStyleJL" style="background-color: inherit; margin-top: 0;">
+
+    <div class="middle_jl">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="pills-profile-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=profile">基本資料</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-record-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=courses">課程資料</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-log-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=log">Log歷史紀錄</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<?php endif ?>
 <div class="pad30" id="form">
 
     <div class="titleJL textC marT0 marB0">
         <h1>課程內容</h1>
     </div>
 
-    <div class="table-responsive">
+    <div class="container-fluid table-responsive">
         <form id="course_form" action="." method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label>課程名稱</label>
@@ -21,13 +39,13 @@
             <div class="form-group">
                 <label>分潤比例</label>
                 <div class="row">
-                    <div class="col-1" style="text-align: center">
+                    <div class="col-auto mr-auto" style="text-align: center">
                         平台 <span id="share-platform"><?= $course['share'] ?></span>
                     </div>
-                    <div class="col-10">
+                    <div class="col">
                         <input type="range" name="share" min="0" max="1" step="0.1" class="form-control" value="<?= $course['share'] ?>" required="" onchange="updateShare(this.value)">
                     </div>
-                    <div class="col-1" style="text-align: center">
+                    <div class="col-auto ml-auto" style="text-align: center">
                         老師 <span id="share-teacher"><?= 1-$course['share'] ?></span>
                     </div>
             </div>
@@ -62,7 +80,7 @@
                     <?php endforeach ?>
                 </select> -->
             </div>
-            <button type="submit" class="btn btn-lg btn-primary">確認修改</button>
+            <button type="submit" <?= (isset($_GET['teacher']))? 'name="redirect" value="/admin/teacherInfo/' . $_GET['teacher'] . '/?tab=courses"' : '' ?> class="btn btn-lg btn-primary">確認修改</button>
         </form>
     </div>
 

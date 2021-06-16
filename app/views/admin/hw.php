@@ -1,4 +1,23 @@
+<?php if (isset($_GET['teacher'])) : ?>
+<div class="tabStyleJL" style="background-color: inherit; margin-top: 0;">
+
+    <div class="middle_jl">
+        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="pills-profile-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=profile">基本資料</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-record-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=courses">課程資料</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="pills-log-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=log">Log歷史紀錄</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<?php else: ?>
 <div class="pad30">
+<?php endif ?>
 
     <div class="titleJL textC marT0 marB0">
         <h1><?= $course ?> - 作業</h1>
