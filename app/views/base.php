@@ -40,7 +40,11 @@
 
 </head>
 
+<?php if (isset($_SESSION['loginType']) && $_SESSION['loginType'] == 3 && $this->_controller != 'course') : ?>
+<body style="overflow:hidden">
+<?php else: ?>
 <body>
+<?php endif ?>
 
     <!--//==Preloader Start==//-->
     <div class="preloader">
@@ -151,7 +155,7 @@
                     <li><a href="/admin/logs/">log歷史紀錄</a></li>
                 </ul>
             </div>
-            <div class="col-12 col-xs-9 col-md-10">
+            <div class="col-12 col-xs-9 col-md-10" style="overflow-y: scroll; height: 90vh;">
                 <?php include($controllerLayout); ?>
             </div>
         </div>
