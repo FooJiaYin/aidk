@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="boxBor loginBox">
+    <div class="boxBor loginBox" style="width: 70%">
 
         <div class="titleJL textC">
             <h1>上傳作業</h1>

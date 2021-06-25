@@ -20,14 +20,15 @@ class DownloadController extends Controller
     
     public function hw($id = null) {        
         $hw = (new AssignmentModel)->where(['id = :id'], [':id' => $id])->fetch();
-        $stu = (new StudentModel)->where(['id = :id'], [':id' => $hw['user']])->fetch();
-        $course = (new CourseModel)->where(['id = :id'], [':id' => $hw['course']])->fetch();
+        $courseBought = (new CourseBoughtModel)->where(['id = :id'], [':id' => $hw['course_bought']])->fetch();
+        $stu = (new StudentModel)->where(['id = :id'], [':id' => $courseBought['user']])->fetch();
+        $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
         if(isset($_SESSION['isLogin'])) {
             if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher'])) {
                 $hw = (new AssignmentModel)->where(['id = :id'], [':id' => $id])->fetch();                
                 $filename = explode('.', $hw['name']);
                 $file_ext = end($filename);
-                $filename = $hw['course'] . '_' . $hw['user'] . '_' . $hw['id'] . '.' . $file_ext;
+                $filename = $courseBought['course'] . '_' . $courseBought['user'] . '_' . $hw['id'] . '.' . $file_ext;
                 $filepath = "./course_data/" . $hw['course'] . '/hw/' . $filename;
                 $date = str_replace('-', '', substr($hw['uploaded_time'], 0, 10));
                 header('Content-Description: File Transfer');

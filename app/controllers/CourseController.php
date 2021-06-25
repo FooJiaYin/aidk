@@ -151,7 +151,8 @@ class CourseController extends Controller
         $hwList = (new AssignmentModel)->where(['course = :course'], [':course' => $id])->fetchAll();
         foreach ($hwList as $k => $hw) {
             // $course = (new CourseModel)->where(['id = :id'], [':id' => $hw['course']])->fetch();
-            $student = (new StudentModel)->where(['id = :id'], [':id' => $hw['user']])->fetch();
+            $courseBought = (new CourseBoughtModel)->where(['id = :id'], [':id' => $hw['course_bought']])->fetch();
+            $student = (new StudentModel)->where(['id = :id'], [':id' => $courseBought['user']])->fetch();
             $hwList[$k]['student_name'] = $student['name'];
         }
         if(isset($_SESSION['isLogin'])) {
@@ -245,13 +246,13 @@ class CourseController extends Controller
             $isBought = (new CourseBoughtModel)->where(['course = :course', 'AND', 'user = :user'], [':course' => $courseID, ':user' => $_SESSION['id']])->fetch();
             if ($isBought && !$isBought['hw_uploaded']) {
                 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['hw'])) {
-                    if(strlen($_FILES['hw']['name']) <= 20) {
+                    if(mb_strlen($_FILES['hw']['name']) <= 20) {
                         $filename = explode('.', $_FILES['hw']['name']);
                         $file_ext = end($filename);
                         // $filename = $courseID . "_" . $stu['name'] . "_" . date("Ymd") . "." . $file_ext;
                         $hw = [
                             'name' => $_FILES['hw']['name'],
-                            'user' => $_SESSION['id'],
+                            'course_bought' => $isBought['id'],
                             'course' => $courseID,
                             'comment' => ""
                         ];

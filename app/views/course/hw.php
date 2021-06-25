@@ -36,7 +36,7 @@
                     <tr class="alert alert-dismissible fade show" role="alert">
                         <th scope="row"><?= $hw['student_name'] ?></th>
                         <!-- <th scope="row"><a href="/course_data/<?= $hw['course'] ?>/hw/<?= $hw['name'] ?>"><?= $hw['name'] ?></a></th> -->
-                        <th scope="row"><a href="/admin/download/<?= $hw['id'] ?>"><?= $hw['name'] ?></a></th>
+                        <th scope="row"><a href="/download/hw/<?= $hw['id'] ?>"><?= $hw['name'] ?></a></th>
                         <th scope="row"><?= $hw['uploaded_time'] ?></th>
                         <th scope="row"><?= $hw['score'] ?></th>
                         <td>

@@ -263,8 +263,8 @@ class AdminController extends Controller
         $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
         $hwList = (new AssignmentModel)->where(['course = :course'], [':course' => $id])->fetchAll();
         foreach ($hwList as $k => $hw) {
-            // $course = (new CourseModel)->where(['id = :id'], [':id' => $hw['course']])->fetch();
-            $student = (new StudentModel)->where(['id = :id'], [':id' => $hw['user']])->fetch();
+            $courseBought = (new CourseBoughtModel)->where(['id = :id'], [':id' => $hw['course_bought']])->fetch();
+            $student = (new StudentModel)->where(['id = :id'], [':id' => $courseBought['user']])->fetch();
             $hwList[$k]['student_name'] = $student['name'];
         }
         if(isset($_SESSION['isLogin'])) {

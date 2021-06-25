@@ -4,10 +4,10 @@
     <div class="middle_jl">
         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="pills-profile-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=profile">基本資料</a>
+                <a class="nav-link" id="pills-profile-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=profile">基本資料</a>
             </li>
             <li class="nav-item" role="presentation">
-                <a class="nav-link" id="pills-record-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=courses">課程資料</a>
+                <a class="nav-link active" id="pills-record-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=courses">課程資料</a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link" id="pills-log-tab" href="/admin/teacherInfo/<?= $_GET['teacher'] ?>/?tab=log">Log歷史紀錄</a>
