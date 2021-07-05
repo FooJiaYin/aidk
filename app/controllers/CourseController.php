@@ -19,35 +19,51 @@ class CourseController extends Controller
     public function __construct($controller, $action)
     {
         parent::__construct($controller, $action);
+        $this->assign('new_style', false);
     }
 
-    function assignCourses($courses) {
+    function assignCourses($courses, $name = 'courses') {
         foreach ($courses as $k => $c) {
             $categoryList = json_decode($c['category'], true);
             $courses[$k]['category'] = $categoryList;
         }
-        $this->assign('courses', $courses);  
+        $this->assign($name, $courses);  
     }
 
-    private function getQueryOrder() {
-        if(!isset($_GET['order'])) {
-            $order = 'id DESC';
-        }            
-        else {
-            $order = substr($_GET['order'], 0, -1);
-            if(substr($_GET['order'], -1) == 'D') $order .= " DESC";
+    private function getQueryOrder($str = null) {
+        if($str == null) {
+            if(!isset($_GET['order'])) {
+                $str = "idD";
+            }            
+            else {
+                $str = $_GET['order'];
+            }
         }
+        $order = substr($str, 0, -1);
+        if(substr($str, -1) == 'D') $order .= " DESC";
         return $order;
     }
 
     public function index($search = null)
+    {
+        $courses_new = (new CourseModel)->getTopCourses(3, $this->getQueryOrder('idD'));
+        $courses_hot = (new CourseModel)->getTopCourses(3, $this->getQueryOrder('stuCountD'));
+        $this->assignCourses($courses_new, 'courses_new'); 
+        $this->assignCourses($courses_hot, 'courses_hot'); 
+        $this->assignCourses($courses_hot, 'courses_best'); 
+        $this->assign('new_style', true);
+        $this->assign('category', null);
+        $this->render();
+    }
+
+    public function all($search = null)
     {
         if ($search == 'search' && isset($_GET['keyword']) && $_GET['keyword'] != '') {
             $courses = (new CourseModel)->searchCourse($_GET['keyword']);
         } else {
             $courses = (new CourseModel)->order([$this->getQueryOrder()])->fetchAll();
         }
-        $this->assignCourses($courses);       
+        $this->assignCourses($courses); 
         $this->assign('category', null);
         $this->render();
     }

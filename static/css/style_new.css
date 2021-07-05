@@ -1,0 +1,177 @@
+@charset "utf-8";
+
+/* Fonts include */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+/* Bootstrap core CSS*/
+@import url("https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css");
+@import url("bootstrap-material-datetimepicker.css");
+
+@import url("https://unpkg.com/aos@2.3.1/dist/aos.css");
+
+@import url("slick.css");
+@import url("slick-theme.css");
+
+/* Global color setting */
+
+.text-green {
+    color: #64b067;
+}
+
+.bg-green {
+    background-color: #64b067;
+    color: white !important;
+}
+
+.text-orange {
+    color: #f7b62d;
+}
+
+.bg-orange {
+    background-color: #f7b62d;
+    color: white !important;
+}
+
+.text-grey {
+    color: #777 !important;
+}
+
+/* Global font setting */
+
+h2 {
+    font-size: 1.3rem;
+    color: #777;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+.bar-left {
+    padding-left: 0.5em;
+    border-left: 4px solid #f7b62d;
+}
+
+/* Global sizing setting */
+
+.btn {
+    min-width: 135px;
+    font-weight: bold;
+}
+
+.w-fit {
+    width: fit-content;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.text-ellipsis {    
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* Header */
+
+.navbar-brand img {
+    max-height: 1em;
+}
+
+.navbar-nav .nav-link {
+    font-weight: bold;
+}
+
+.navbar .search input{
+    height: 2em;
+    font-size: 0.8em;
+}
+
+.navbar .search input::placeholder,
+.navbar .search input::-ms-input-placeholder {
+    color: #c0c0c0;
+}
+
+.navbar .search i {
+    right: 0;
+    top: 5px;
+}
+
+.navbar #menu-toggle img {
+    height: 2.2em;
+}
+
+.navbar-nav.ml-auto .dropdown-menu {
+    right: 0;
+    left: inherit;
+    border: none;
+    box-shadow: #555 1em;
+}
+
+.navbar-nav.ml-auto .dropdown-menu a {
+    color: #777;
+    font-weight: bold;
+}
+
+/* Footer */
+
+footer {
+    background-color: #333;
+    color: white !important;
+}
+
+footer h3 {
+    margin-bottom: 0.5em;
+    font-size: 1.3rem;
+}
+
+footer p {
+    margin-bottom: 0.5rem;
+}
+
+footer i {
+    width: 1.5em;
+}
+
+/* Index */
+
+#features-section img,
+#banner-section img,
+#portfolio-section img {
+    max-width: 100%;
+}
+
+/* Course */
+
+.course-card {
+    border-radius: 0.3rem;
+}
+
+.course-card .card-img-top {
+    border-radius: 0.3rem 0.3rem 0 0;
+    object-fit: cover;
+}
+
+.course-card .course-tag {
+    font-size: 0.7em;
+    font-weight: normal;
+    padding: 5px 8px;
+}
+
+.course-card .card-title {
+    color: #777;
+    font-weight: bold;
+    height: 2.3em;
+    overflow: hidden;
+}
+
+.course-card .card-text {
+    color: #bbb;
+    font-size: 0.9em;
+    margin-bottom: 0;
+    align-self: flex-end;
+}
+
+
+
+

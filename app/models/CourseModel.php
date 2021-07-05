@@ -68,6 +68,15 @@ class CourseModel extends Model
         return $sth->fetchAll();
     }
 
+    public function getTopCourses($N, $order)
+    {
+        $sql = "SELECT * FROM `course` ORDER BY ".$order." LIMIT " . $N;
+        $sth = Db::pdo()->prepare($sql);
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
+
     public function getRandomCourse()
     {
         $sql = "SELECT t1.id as id, t1.name, t1.category, t1.description
