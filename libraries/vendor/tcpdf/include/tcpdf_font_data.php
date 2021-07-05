@@ -45,6 +45,9 @@
  * @version 1.0.001
  * @author Nicola Asuni - info@tecnick.com
  */
+
+namespace libraries\vendor\tcpdf;
+
 class TCPDF_FONT_DATA {
 
 /**

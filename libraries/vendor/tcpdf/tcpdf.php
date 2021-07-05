@@ -107,6 +107,8 @@
  * @version 6.3.2
  */
 
+namespace libraries\vendor\tcpdf;
+
 // TCPDF configuration
 require_once(dirname(__FILE__).'/tcpdf_autoconfig.php');
 // TCPDF static font methods and data
@@ -134,6 +136,7 @@ require_once(dirname(__FILE__).'/include/tcpdf_static.php');
  * @IgnoreAnnotation("public")
  * @IgnoreAnnotation("pre")
  */
+
 class TCPDF {
 
 	// Protected properties
@@ -1981,6 +1984,7 @@ class TCPDF {
 		$this->jpeg_quality = 75;
 		// initialize some settings
 		TCPDF_FONTS::utf8Bidi(array(), '', false, $this->isunicode, $this->CurrentFont);
+		TCPDF_FONTS::addTTFfont('libraries/vendor/tcpdf/fonts/TaipeiSansTCBeta.ttf');
 		// set default font
 		$this->SetFont($this->FontFamily, $this->FontStyle, $this->FontSizePt);
 		$this->setHeaderFont(array($this->FontFamily, $this->FontStyle, $this->FontSizePt));

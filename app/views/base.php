@@ -108,6 +108,7 @@
                                 <li><a href="/student/myCourses/">我的課程</a></li>
                                 <li><a href="/student/record/">消費紀錄</a></li>
                                 <li><a href="/student/myScore/">我的測驗</a></li>
+                                <li><a href="/student/portfolio/">學習歷程</a></li>
                                 <li><a href="/student/logout/">登出</a></li>
                             </ul>
                         </li>

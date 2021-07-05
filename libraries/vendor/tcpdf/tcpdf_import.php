@@ -42,6 +42,8 @@
  * @version 1.0.001
  */
 
+namespace libraries\vendor\tcpdf;
+
 // include the TCPDF class
 require_once(dirname(__FILE__).'/tcpdf.php');
 // include PDF parser class
@@ -56,6 +58,7 @@ require_once(dirname(__FILE__).'/tcpdf_parser.php');
  * @version 1.0.001
  * @author Nicola Asuni - info@tecnick.com
  */
+
 class TCPDF_IMPORT extends TCPDF {
 
 	/**

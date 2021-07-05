@@ -24,7 +24,7 @@ class DownloadController extends Controller
         $stu = (new StudentModel)->where(['id = :id'], [':id' => $courseBought['user']])->fetch();
         $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
         if(isset($_SESSION['isLogin'])) {
-            if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher'])) {
+            if($_SESSION['loginType'] == 3 || ($_SESSION['loginType'] == 2 && $_SESSION['id'] == $course['teacher']) || ($_SESSION['loginType'] == 1 && $_SESSION['id'] == $stu['id'])) {
                 $hw = (new AssignmentModel)->where(['id = :id'], [':id' => $id])->fetch();                
                 $filename = explode('.', $hw['name']);
                 $file_ext = end($filename);

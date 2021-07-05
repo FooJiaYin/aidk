@@ -4,6 +4,7 @@ namespace libraries\base;
 
 use libraries\vendor\PHPMailer\PHPMailer;
 use libraries\vendor\PHPMailer\Exception;
+use libraries\vendor\tcpdf\TCPDF;
 
 class Common
 {

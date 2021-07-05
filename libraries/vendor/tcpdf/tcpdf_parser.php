@@ -40,6 +40,8 @@
  * @version 1.0.15
  */
 
+namespace libraries\vendor\tcpdf;
+
 // include class for decoding filters
 require_once(dirname(__FILE__).'/include/tcpdf_filters.php');
 
@@ -51,6 +53,7 @@ require_once(dirname(__FILE__).'/include/tcpdf_filters.php');
  * @version 1.0.15
  * @author Nicola Asuni - info@tecnick.com
  */
+
 class TCPDF_PARSER {
 
 	/**

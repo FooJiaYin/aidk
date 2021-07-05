@@ -49,6 +49,9 @@
  * @version 1.1.1
  * @author Nicola Asuni - info@tecnick.com
  */
+
+namespace libraries\vendor\tcpdf;
+
 class TCPDF_STATIC {
 
 	/**

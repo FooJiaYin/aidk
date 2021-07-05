@@ -1,17 +1,23 @@
 <?php
 
+
 namespace app\controllers;
 
-use libraries\base\Controller;
-use libraries\base\Authorization as auth;
+include('libraries/vendor/tcpdf/tcpdf.php');
+
 use libraries\vendor\PHPMailer\PHPMailer;
 use libraries\vendor\PHPMailer\Exception;
+use libraries\vendor\tcpdf\TCPDF;
+use libraries\base\Controller;
+use libraries\base\Authorization as auth;
+use libraries\base\Common;
 
 use app\models\StudentModel;
 use app\models\CourseModel;
 use app\models\SchoolModel;
 use app\models\TransactionModel;
 use app\models\CourseBoughtModel;
+use app\models\AssignmentModel;
 use app\models\LogModel;
 
 class StudentController extends Controller
@@ -400,6 +406,223 @@ class StudentController extends Controller
             header("Location: /");
         }
         exit();
+    }
+
+    public function portfolio()
+    {
+        auth::checkAuth();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['download']) && isset($_SESSION['isLogin'])) {
+                $this->downloadPortfolio($_POST);
+            }
+            else if ($_POST['autobiography']) {
+                (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update([
+                    'autobiography' => $_POST['autobiography']
+                ]);
+            }
+            else if ($_POST['thoughts']) {
+                (new CourseBoughtModel)->where(['id = :id'], [':id' => $_POST['courseId']])->update([
+                    'thoughts' => $_POST['thoughts']
+                ]);
+            }
+        }
+        else {
+            $bougthCourses = (new CourseBoughtModel)->where(['user = :user'], [':user' => $_SESSION['id']])->fetchAll();
+            foreach ($bougthCourses as $k => $courseBought) {
+                $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
+                $bougthCourses[$k]['name'] = $course['name'];
+            }
+            $this->assign('bougthCourses', $bougthCourses);
+            $this->render();
+        }
+    }
+
+    private function downloadPortfolio($formData) {
+        $student = (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->fetch();
+        // $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
+        // $pdf = new GenPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        // $pdf->output('portfolio.pdf', 'I');
+
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('AIDK');
+        $pdf->SetTitle('學習歷程');
+        $pdf->SetSubject('學習歷程');
+        // set default header data
+        $pdf->SetHeaderData('/static/images/logo_green.png', 30, '學習歷程AI導航者', 'www.aidk.com.tw', array(0,64,255), array(0,64,128));
+        $pdf->setFooterData(array(0,64,0), array(0,64,128));
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array('DroidSansFallback', '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // set margins
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+            require_once(dirname(__FILE__).'/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+
+        // set default font subsetting mode
+        $pdf->setFontSubsetting(true);
+
+        // Set font
+        $pdf->SetFont('DroidSansFallback', '', 12, '', true);
+
+        if (isset($_POST['profile-select']) && $_POST['profile-select'] == "free") {
+            $pdf->AddPage();
+            
+            // Set some content to print
+            $html = '<h1 style="text-align: center">基本資料</h1>
+            <table border="1" width="100%" cellpadding="4">
+                <tr><td width="10%">姓名</td><td colspan="3" width="90%">' . $student['name'] . '</td></tr>
+                <tr><td>學校</td><td width="40%">' . $student['school'] . '</td><td width="10%">年級</td><td width="40%">' . $student['grade'] . '</td></tr>
+                <tr><td>生日</td><td width="40%">' . $student['birthday'] . '</td><td width="10%">性別</td><td width="40%">' . (($student['gender'] == 'F')? '女' : '男') . '</td></tr>
+                <tr><td>Email</td><td width="40%">' . $student['account'] . '</td><td width="10%">電話</td><td width="40%">' . $student['phone'] . '</td></tr>
+                <tr><td width="10%">住址</td><td colspan="3" width="90%">' . $student['address'] . '</td></tr>
+            </table>
+            <br><br><br>';
+            $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+            
+        }
+        if (isset($_POST['autobiography-select']) && $_POST['autobiography-select'] == "free") {
+            if(!isset($_POST['profile-select'])) $pdf->AddPage();
+            
+            // Set some content to print
+            $html = '<h1 style="text-align: center">自傳</h1>' . 
+            '<p>' . $student['autobiography'] . '</p>';
+            // '<p>日期：' . date("Y/m/d") . '</p>';
+            $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        }
+        if (isset($_POST['score-select']) && $_POST['score-select'] == "free") {
+            $pdf->AddPage();                            
+            $scoreImg = $formData['scoreImg_base64'];  
+            $scoreImg = str_replace('data:image/jpeg;base64,', '', $scoreImg);  
+            $scoreImg = str_replace(' ', '+', $scoreImg);  
+            $pdf->Image('@'.$data);             
+            $data = base64_decode($scoreImg);
+            $html = '<img src="data:image/jpeg;base64,' . $scoreImg . '"  width="50" height="50">';
+            $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        }
+        foreach ($_POST['course-select'] as $k => $selectedCourse) {
+            $selectedCourse = intval($selectedCourse);
+            // print($selectedCourse . ' ');
+            $pdf->AddPage();
+            $courseBought = (new CourseBoughtModel)->where(['id = :id'], [':id' => $selectedCourse])->fetch();
+            $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
+
+            $html = '<h1 style="text-align: center">課程證書</h1>
+                <p style="text-align: center">學生 ' . $student['name'] . ' 已完成課程 ' . $course['name'] . ' ，特此頒發證書</p>
+                <p>日期：' . date("Y/m/d") . '</p>';
+            $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+
+            $pdf->AddPage();
+            $html = '<h1 style="text-align: center">' . $course['name'] . '</h1>
+                <h2>學習心得：</h2>
+                <p>' . $courseBought['thoughts'] . '</p>
+                <h2>教師評語：</h2>
+                <p>' . $courseBought['feedback'] . '</p>';
+            $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+        }
+        $pdf->Output('portfolio.pdf', 'I');
+    }
+
+    public function hw($id = null) {
+        if(isset($_SESSION['isLogin'])) {
+            $courseBought = (new CourseBoughtModel)->where(['id = :id'], [':id' => $id])->fetch();
+            if($_SESSION['id'] == $courseBought['user']) {
+                $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
+                $hwList = (new AssignmentModel)->where(['course_bought = :course_bought'], [':course_bought' => $id])->fetchAll();
+                $student = (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->fetch();
+                foreach ($hwList as $k => $hw) {
+                    $hwList[$k]['student_name'] = $student['name'];
+                }
+                $this->assign('hwList', $hwList);
+                $this->assign('course', $course['name']);
+                $this->render();
+            }
+        }
+    }
+
+    function cert($id) {
+        if(isset($_SESSION['isLogin'])) {
+            $student = (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->fetch();
+            $courseBought = (new CourseBoughtModel)->where(['id = :id'], [':id' => $id])->fetch();
+            if($_SESSION['id'] == $courseBought['user']) {
+                $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
+
+                $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+                // set document information
+                $pdf->SetCreator(PDF_CREATOR);
+                $pdf->SetAuthor('AIDK');
+                $pdf->SetTitle('課程證書');
+                $pdf->SetSubject('課程證書');
+                // set default header data
+                $pdf->SetHeaderData(PDF_HEADER_LOGO, 30, '學習歷程AI導航者', 'www.aidk.com.tw', array(0,64,255), array(0,64,128));
+                $pdf->setFooterData(array(0,64,0), array(0,64,128));
+
+                // set header and footer fonts
+                $pdf->setHeaderFont(Array('DroidSansFallback', '', PDF_FONT_SIZE_MAIN));
+                $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+                // set default monospaced font
+                $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+                // set margins
+                $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+                $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+                // set auto page breaks
+                $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+                // set image scale factor
+                $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+                // set some language-dependent strings (optional)
+                if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+                    require_once(dirname(__FILE__).'/lang/eng.php');
+                    $pdf->setLanguageArray($l);
+                }
+
+                // set default font subsetting mode
+                $pdf->setFontSubsetting(true);
+
+                // Set font
+                $pdf->SetFont('DroidSansFallback', '', 12, '', true);
+
+                // Add a page
+                // This method has several options, check the source code documentation for more information.
+                $pdf->AddPage();
+
+                // Set some content to print
+                $html = '<h1 style="text-align: center">課程證書</h1>' . 
+                '<p style="text-align: center">學生 ' . $student['name'] . ' 已完成課程 ' . $course['name'] . ' ，特此頒發證書</p>' .
+                '<p>日期：' . date("Y/m/d") . '</p>';
+
+                // Print text using writeHTMLCell()
+                $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
+
+                // $pdf->AddPage();
+                $pdf->Output('certificate.pdf', 'I');
+            }
+        }
     }
 
     public function privacyPolicy() 
