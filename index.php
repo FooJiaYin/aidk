@@ -13,7 +13,6 @@ $config = require(APP_PATH . 'config/config.php');
 
 date_default_timezone_set('Asia/Taipei');
 
-
 // 啟動Session
 session_start();
 
