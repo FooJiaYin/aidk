@@ -78,8 +78,7 @@ class Core
 
         // $dispatch保存控制器实例化后的对象，我们就可以调用它的方法，
         // 也可以像方法中传入参数，以下等同于：$dispatch->$actionName($param)
-        // call_user_func_array(array($dispatch, $actionName), $param);
-        echo $controllerName;
+        call_user_func_array(array($dispatch, $actionName), $param);
     }
 
     // 偵測Debug mode
