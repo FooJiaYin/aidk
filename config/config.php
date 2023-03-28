@@ -1,10 +1,14 @@
 <?php
 
 // 資料庫設定
-$config['db']['host'] = 'mysql';
-$config['db']['username'] = 'db_user';
-$config['db']['password'] = 'db_pwd';
-$config['db']['dbname'] = 'aidkAdmin';
+// $config['db']['host'] = 'mysql';
+// $config['db']['username'] = 'db_user';
+// $config['db']['password'] = 'db_pwd';
+// $config['db']['dbname'] = 'aidkAdmin';
+$config['db']['host'] = getenv('mysql');
+$config['db']['username'] = getenv('db_user');
+$config['db']['password'] = getenv('db_pwd');
+$config['db']['dbname'] = getenv('aidkAdmin');
 
 // 預設控制器
 $config['defaultController'] = 'Course';
