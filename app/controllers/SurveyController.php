@@ -15,6 +15,7 @@ class SurveyController extends Controller
     public function __construct($controller, $action)
     {
         parent::__construct($controller, $action);
+        $this->assign('newStyle', false);
     }
 
     public function assignSchools() {        
@@ -28,14 +29,17 @@ class SurveyController extends Controller
 
     public function index()
     {
+        $this->assign('newStyle', true);
         $this->render();
     }
 
     public function instructions()
     {
+        $this->assign('newStyle', true);
         $this->render();
     }
 
+    // TODO: New style
     public function personal_info()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -373,9 +377,11 @@ class SurveyController extends Controller
         $question = (new SurveyModel)->where(['id = :id'], [':id' => $qid])->fetch();
         $this->assign('step', $step); 
         $this->assign('question', $question); 
+        $this->assign('newStyle', true); 
         $this->render();
     }
 
+    // TODO: New style
     public function signup()
     {
         // if (isset($_GET['debug'])) $_SESSION['surv_score'] = "[20, 30, 40, 50, 60, 70]";

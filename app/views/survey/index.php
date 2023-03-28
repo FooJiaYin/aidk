@@ -1,23 +1,19 @@
-<div class="container">
+<div class="container mb-5">
 
-    <div class="row align-items-center">
-        <div class="col-5 col-sm-6">
-            <img src="/static/images/img_robot.svg" alt="AI" />
+    <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-sm-6 my-5">
+            <img class="img-fluid" src="/static/images/index-survey.png" alt="AI" />
         </div>
 
-        <div class="col-7 col-sm-6">
-
-            <img src="/static/images/img_cloud.svg" alt="雲" />
-
-
-            <div class="middle_jl">
-
-                <div class="titleJL marT30 marB40">
-                    <h1>學習歷程AI導航者</h1>
-                </div>
-                <a href="/survey/instructions/" class="btnJL">進入學群學系分析系統</a>
-                <a href="/" class="btnJL">AIDK 學習課程平台</a>
-            </div>
+        <div class="col-12 col-sm-auto text-center justify-content-center">
+            <h2>還不知道自己喜歡哪種學群學類嗎？</h2>
+            <h2><img class="img-inline" src="/static/images/logo_green.png" alt="AIDK" />專業興趣測驗<br class="d-sm-none">協助您找到未來方向！</h2>
+            <!-- <img src="/static/images/index-survey.png" alt="雲" /> -->
+            <center>
+                <a href="/survey/instructions/" class="btn bg-orange mt-4">
+                    <i class="fa fa-arrow-circle-right"></i> 開始測驗
+                </a>
+            </center>
         </div>
 
     </div>

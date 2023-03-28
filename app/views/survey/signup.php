@@ -27,14 +27,14 @@
                         <div class="form-group">
                             <input type="password" class="form-control" name="password" id="password" placeholder="密碼" required>
                         </div>
+                        <div id="login_info">
                         <div class="form-group">
                             <label class="check_style">我已詳閱並同意《<a data-toggle="modal" data-target="#exampleModalCenter"><u>
-                                        使用條文</u></a>》
+                                使用條文</u></a>》
                                 <input type="checkbox" checked required>
                                 <span class="check_checkmark"></span>
                             </label>
                         </div>
-                        <div id="login_info">
                         <button type="submit" class="btnJL">確認</button>
 
                         <div class="col-12 text-right marB10"><a onclick="forget_password()"><u>忘記密碼?</u></a></div>

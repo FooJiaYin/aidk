@@ -74,7 +74,7 @@ class Authorization
                 else if ($isTeacher) {
                     header("Location: /teacher/login/");
                 } else {
-                    header("Location: /");
+                    header("Location: /survey/signup/");
                 }
                 exit();
             } else {

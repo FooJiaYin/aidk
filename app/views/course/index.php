@@ -19,7 +19,7 @@
                 </a>
             </div>
             <div class="col text-center">
-                <a href="/course/all">
+                <a href="/course/choose">
                     <button class="btn bg-orange">我要上課</button>
                 </a>
             </div>
@@ -41,8 +41,8 @@
     <div class="container" data-aos="fade-up">
         <div class="row align-items-center">
             <div class="col ml-5">
-                <h2>學生分享學習履歷</h2>
-                <p class="text-grey mb-4">學生分享學習履歷學，生分享學習履歷學生分享學習履歷學生。分享學習履歷學生分享學習履歷。學生分享學習履歷學，生分享學習履歷。學生分享學習履歷學生，分享學習履歷學生分享學習履歷。</p>
+                <h2>為什麼需要學習歷程？</h2>
+                <p class="text-grey mb-4">自108課綱施行以來，學習歷程一躍而成師生們討論的重點升學要件之一，但是具體該怎麼做，卻是各自看門道。AIDK提供你一個線上製作學習歷程檔案的工具，幫助你運用在這邊上過的課程素材，或是上傳自有素材，一鍵生成專屬於你的學習歷程參考檔案，讓你面對學習歷程不再不知所措！</p>
                 <a href="/student/portfolio">
                     <div class="btn bg-orange">展開</div>
                 </a>
@@ -105,10 +105,10 @@
             </div>
         <?php endforeach ?>
             <div class="col-6 col-lg-3 align-self-center">
-                <h2 class="bar-left">最新課程</h2>
-                <p class="text-grey mb-4">學生分享學習履歷學，生分享學習履歷學生分享學習履歷學生。分享學習履歷學生分享學習履歷。學生分享學習履歷學，生分享學習履歷。學生分享學習履歷學生，分享學習履歷學生分享學習履歷。</p>
+                <h2 class="bar-left-orange">最新課程</h2>
+                <p class="text-grey mb-4">在知識爆炸的現代，老舊知識隨時都可能會被刷新一波，AIDK匯集最新最潮的線上課程，帶給你更多更新的各種知識，想知道最近多了些什麼酷玩意嗎？看這邊就對了！</p>
                 <div class="text-center">
-                    <a href="/student/portfolio">
+                    <a href="/course/all?order=idD">
                         <div class="btn bg-orange">更多課程<i class="fa fa-arrow-circle-right ml-2"></i></div>
                     </a>
                 </div>
@@ -121,10 +121,10 @@
     <div class="container" data-aos="fade-up">
         <div class="row">            
             <div class="col-6 col-lg-3 align-self-center">
-                <h2 class="bar-left">熱門課程</h2>
-                <p class="text-grey mb-4">學生分享學習履歷學，生分享學習履歷學生分享學習履歷學生。分享學習履歷學生分享學習履歷。學生分享學習履歷學，生分享學習履歷。學生分享學習履歷學生，分享學習履歷學生分享學習履歷。</p>
+                <h2 class="bar-left-orange">熱門課程</h2>
+                <p class="text-grey mb-4">流行隨時在變，知識的熱潮走向同樣瞬息萬變，想知道大家都在學些什麼嗎？AIDK將我們近期最受歡迎的線上課程介紹給你，讓你學習不落人後，永遠走在潮流最前線！</p>
                 <div class="text-center">
-                    <a href="/student/portfolio">
+                    <a href="/course/all?order=stuCountD">
                         <div class="btn bg-orange">更多課程<i class="fa fa-arrow-circle-right ml-2"></i></div>
                     </a>
                 </div>
@@ -201,10 +201,10 @@
             </div>
         <?php endforeach ?>
             <div class="col-6 col-lg-3 align-self-center">
-                <h2 class="bar-left">好評課程</h2>
-                <p class="text-grey mb-4">學生分享學習履歷學，生分享學習履歷學生分享學習履歷學生。分享學習履歷學生分享學習履歷。學生分享學習履歷學，生分享學習履歷。學生分享學習履歷學生，分享學習履歷學生分享學習履歷。</p>
+                <h2 class="bar-left-orange">好評課程</h2>
+                <p class="text-grey mb-4">就像千里馬需要遇到伯樂般，好的課程也需要懂它的人來欣賞，才能更顯得有多優質。在AIDK想要找個好課不用挖寶探尋，也能在這裡找到大家呷好道相報的好東西。</p>
                 <div class="text-center">
-                    <a href="/student/portfolio">
+                    <a href="/course/all?order=idD">
                         <div class="btn bg-orange">更多課程<i class="fa fa-arrow-circle-right ml-2"></i></div>
                     </a>
                 </div>

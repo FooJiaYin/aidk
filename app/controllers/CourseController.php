@@ -19,7 +19,7 @@ class CourseController extends Controller
     public function __construct($controller, $action)
     {
         parent::__construct($controller, $action);
-        $this->assign('new_style', false);
+        $this->assign('newStyle', false);
     }
 
     function assignCourses($courses, $name = 'courses') {
@@ -51,8 +51,8 @@ class CourseController extends Controller
         $this->assignCourses($courses_new, 'courses_new'); 
         $this->assignCourses($courses_hot, 'courses_hot'); 
         $this->assignCourses($courses_hot, 'courses_best'); 
-        $this->assign('new_style', true);
         $this->assign('category', null);
+        $this->assign('newStyle', true);
         $this->render();
     }
 
@@ -63,8 +63,9 @@ class CourseController extends Controller
         } else {
             $courses = (new CourseModel)->order([$this->getQueryOrder()])->fetchAll();
         }
-        $this->assignCourses($courses); 
+        $this->assignCourses($courses);
         $this->assign('category', null);
+        $this->assign('newStyle', true);
         $this->render();
     }
 
@@ -75,6 +76,8 @@ class CourseController extends Controller
         $duration = explode(":", $course['duration']);
         $course['duration'] = sprintf("%d分%d秒", $duration[0], $duration[1]);
         $course['chapter'] = json_decode($course['chapter'], true);
+        $categoryList = json_decode($course['category'], true);
+        $course['category'] = $categoryList;
 
         $path = "course_data/$id/img/";
         $imgs = array_diff(scandir($path), array('.', '..'));
@@ -93,6 +96,7 @@ class CourseController extends Controller
         $this->assign('course', $course); 
         $this->assign('imgs', $imgs);
         $this->assign('isBought', $isBought);
+        $this->assign('newStyle', true);
         $this->render();
     }
 
@@ -116,7 +120,9 @@ class CourseController extends Controller
 
         $course = (new CourseModel)->where(['id = :id'], [':id' => $id])->fetch();
         $course['chapter'] = json_decode($course['chapter'], true);
-
+        $courseBought = (new CourseBoughtModel)->where(['course = :course', 'AND', 'user = :user'], [':course' => $id, ':user' => $_SESSION['id']])->fetch();
+        $hwList = (new AssignmentModel)->where(['course_bought = :course_bought'], [':course_bought' => $courseBought['id']])->fetchAll();
+        
         if (isset($_GET['chapter']) && isset($_GET['section'])) {
             $chapter = $_GET['chapter'];
             $section = $_GET['section'];
@@ -132,13 +138,27 @@ class CourseController extends Controller
         $video = $course['chapter'][$chapter]['section'][$section]['video'];
 
         $comments = (new CommentModel)->where(['course = :course'], [':course' => $id])->fetchAll();
+        foreach ($comments as $k => $c) {
+            // $course = (new CourseModel)->where(['id = :id'], [':id' => $hw['course']])->fetch();
+            $student = (new StudentModel)->where(['id = :id'], [':id' => $c['user']])->fetch();
+            $comments[$k]['user'] = $student['name'];
+        }
 
         $this->assign('course', $course);  
         $this->assign('chapter', $chapter);
         $this->assign('section', $section);
+        $this->assign('courseBought', $courseBought);
+        $this->assign('hwList', $hwList);
         $this->assign('video', $video);
         $this->assign('isBought', $isBought);
         $this->assign('comments', $comments);
+        $this->assign('newStyle', true);
+        $this->render();
+    }
+
+    public function choose()
+    {
+        $this->assign('newStyle', true);
         $this->render();
     }
 
@@ -146,7 +166,11 @@ class CourseController extends Controller
     {
         $courses = (new CourseModel)->getCategoryCourses($category, $this->getQueryOrder());
         $this->assignCourses($courses);
-        $this->assign('category', $category);        
+        if ($category == 0) $this->assign('type', '其他技能');
+        else if ($category <= 18) $this->assign('type', '普通大學');
+        else $this->assign('type', '科技大學');
+        $this->assign('category', $category);   
+        $this->assign('newStyle', true);
         $this->render();
     }
     
@@ -254,6 +278,7 @@ class CourseController extends Controller
         exit();
     }
 
+    // TODO: New style
     public function hw_upload($courseID = null)
     {
         auth::checkAuth();
