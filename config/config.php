@@ -8,7 +8,7 @@
 $config['db']['host'] = getenv('mysql');
 $config['db']['username'] = getenv('db_user');
 $config['db']['password'] = getenv('db_pwd');
-$config['db']['dbname'] = getenv('aidkAdmin');
+$config['db']['dbname'] = getenv('db_name');
 
 // 預設控制器
 $config['defaultController'] = 'Course';
