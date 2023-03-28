@@ -11,7 +11,7 @@ class CourseModel extends Model
 
     public function getStuCourses()
     {
-        $sql = "SELECT a.id AS id, a.name AS name, a.category AS category FROM `course` AS a, `course_bought` AS b WHERE b.user = :user AND a.id = b.course";
+        $sql = "SELECT a.id AS id, a.name AS name, a.category AS category, a.duration AS duration, a.stuCount as stuCount FROM `course` AS a, `course_bought` AS b WHERE b.user = :user AND a.id = b.course";
 
         $sth = Db::pdo()->prepare($sql);
         $sth = $this->formatParam($sth, [':user' => $_SESSION['id']]);
