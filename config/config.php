@@ -6,6 +6,7 @@
 // $config['db']['password'] = 'db_pwd';
 // $config['db']['dbname'] = 'aidkAdmin';
 $config['db']['host'] = getenv('mysql');
+$config['db']['port'] = getenv('db_port');
 $config['db']['username'] = getenv('db_user');
 $config['db']['password'] = getenv('db_pwd');
 $config['db']['dbname'] = getenv('db_name');
