@@ -21,12 +21,12 @@
             var vw = (window.innerWidth > 0) ? window.innerWidth : screen.width;
             var data = {
                 labels: [
-                    "企業型 Enterprising",
-                    "研究型 Investigative",
-                    "事務型 Conventional ",
-                    "社會型 Social",
-                    "實用型 Realistic",
-                    "藝術型 Artistic"
+                    "企業型",
+                    "研究型",
+                    "事務型 ",
+                    "社會型",
+                    "實用型",
+                    "藝術型"
                 ],
                 datasets: [{
                     data: JSON.parse($('#score').val()),
@@ -36,7 +36,7 @@
                 }]
 
             };
-            var fontSize = (vw > 990)? 18 : 12;
+            var fontSize = 18;
             var radarOpts = {
                 pointLabelFontFamily: "sans-serif",
                 pointLabelFontStyle: "400",

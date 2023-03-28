@@ -24,7 +24,7 @@ class TeacherController extends Controller
             $user = null;
         }
 
-
+        $this->assign('newStyle', false);
         $this->assign('user', $user);
     }
 

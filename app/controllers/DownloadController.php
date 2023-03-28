@@ -16,6 +16,7 @@ class DownloadController extends Controller
     public function __construct($controller, $action)
     {
         parent::__construct($controller, $action);
+        $this->assign('newStyle', false);
     }
     
     public function hw($id = null) {        

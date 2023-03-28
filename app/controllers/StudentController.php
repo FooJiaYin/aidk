@@ -31,7 +31,7 @@ class StudentController extends Controller
         } else {
             $this->user = null;
         }
-
+        $this->assign('newStyle', false);
         $this->assign('user', $this->user);
     }
 
@@ -58,6 +58,7 @@ class StudentController extends Controller
     }
 
     // 使用者登入介面
+    // TODO: New style
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -91,6 +92,7 @@ class StudentController extends Controller
         return $result;
     }
 
+    // TODO: New style
     public function resetPassword() // $recipient, $content)
     {
         ini_set("SMTP","ssl://smtp.gmail.com");
@@ -199,6 +201,7 @@ class StudentController extends Controller
     {
         auth::checkAuth();
 
+        $this->assign('newStyle', true);
         $this->render();
     }
 
@@ -222,7 +225,7 @@ class StudentController extends Controller
                 // echo '<script>alert("成功修改密碼");</script>';
                 else {
                     $stu = [
-                        // 'name' => $_POST['name'],
+                        'name' => $_POST['name'],
                         'gender' => $_POST['gender'],
                         'account' => $_POST['account'],
                         // 'credit' => $_POST['credit'],
@@ -238,6 +241,7 @@ class StudentController extends Controller
                 }
             } else {
                 $this->assignSchools();  
+                $this->assign('newStyle', true);
                 $this->render();
             }
         } else {
@@ -324,7 +328,7 @@ class StudentController extends Controller
             $this->assign('interestType', $interestType);
             // $this->assign('randomCourse', $randomCourse);
             $this->assign('courses', $courses);
-
+            $this->assign('newStyle', true);
             $this->render();
         }
     }
@@ -336,8 +340,13 @@ class StudentController extends Controller
         $transactions = (new TransactionModel)->where(['user = :user'], [':user' => $_SESSION['id']])->fetchAll();
 
         $bougthCourses = (new CourseBoughtModel)->where(['user = :user'], [':user' => $_SESSION['id']])->fetchAll();
+        foreach ($bougthCourses as $k => $c) {
+            $course = (new CourseModel)->where(['id = :id'], [':id' => $c['course']])->fetch();
+            $bougthCourses[$k]['name'] = $course['name'];
+        }
         $this->assign('transactions', $transactions);
         $this->assign('bougthCourses', $bougthCourses);
+        $this->assign('newStyle', true);
         $this->render();
     }
         
@@ -358,9 +367,11 @@ class StudentController extends Controller
             $courses[$k]['category'] = $categoryList;
         }
         $this->assign('courses', $courses);
+        $this->assign('newStyle', true);
         $this->render();
     }
 
+    // TODO: New style
     public function buy_credit()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && ctype_digit($_POST['amount'])) {
@@ -410,30 +421,37 @@ class StudentController extends Controller
 
     public function portfolio()
     {
-        auth::checkAuth();
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['download']) && isset($_SESSION['isLogin'])) {
-                $this->downloadPortfolio($_POST);
-            }
-            else if ($_POST['autobiography']) {
-                (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update([
-                    'autobiography' => $_POST['autobiography']
-                ]);
-            }
-            else if ($_POST['thoughts']) {
-                (new CourseBoughtModel)->where(['id = :id'], [':id' => $_POST['courseId']])->update([
-                    'thoughts' => $_POST['thoughts']
-                ]);
-            }
+        if(isset($_GET['intro'])) {
+            $this->assign('newStyle', true);
+            $this->render();
         }
         else {
-            $bougthCourses = (new CourseBoughtModel)->where(['user = :user'], [':user' => $_SESSION['id']])->fetchAll();
-            foreach ($bougthCourses as $k => $courseBought) {
-                $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
-                $bougthCourses[$k]['name'] = $course['name'];
+            auth::checkAuth();
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                if (isset($_POST['download']) && isset($_SESSION['isLogin'])) {
+                    $this->downloadPortfolio($_POST);
+                }
+                else if ($_POST['autobiography']) {
+                    (new StudentModel)->where(['id = :id'], [':id' => $_SESSION['id']])->update([
+                        'autobiography' => $_POST['autobiography']
+                    ]);
+                }
+                else if ($_POST['thoughts']) {
+                    (new CourseBoughtModel)->where(['id = :id'], [':id' => $_POST['courseId']])->update([
+                        'thoughts' => $_POST['thoughts']
+                    ]);
+                }
             }
-            $this->assign('bougthCourses', $bougthCourses);
-            $this->render();
+            else {
+                $bougthCourses = (new CourseBoughtModel)->where(['user = :user'], [':user' => $_SESSION['id']])->fetchAll();
+                foreach ($bougthCourses as $k => $courseBought) {
+                    $course = (new CourseModel)->where(['id = :id'], [':id' => $courseBought['course']])->fetch();
+                    $bougthCourses[$k]['name'] = $course['name'];
+                }
+                $this->assign('bougthCourses', $bougthCourses);
+                $this->assign('newStyle', true);
+                $this->render();
+            }
         }
     }
 
@@ -451,7 +469,7 @@ class StudentController extends Controller
         $pdf->SetTitle('學習歷程');
         $pdf->SetSubject('學習歷程');
         // set default header data
-        $pdf->SetHeaderData('/static/images/logo_green.png', 30, '學習歷程AI導航者', 'www.aidk.com.tw', array(0,64,255), array(0,64,128));
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, 30, '學習歷程AI導航者', 'www.aidk.com.tw', array(0,64,255), array(0,64,128));
         $pdf->setFooterData(array(0,64,0), array(0,64,128));
 
         // set header and footer fonts
@@ -514,9 +532,16 @@ class StudentController extends Controller
             $scoreImg = $formData['scoreImg_base64'];  
             $scoreImg = str_replace('data:image/jpeg;base64,', '', $scoreImg);  
             $scoreImg = str_replace(' ', '+', $scoreImg);  
-            $pdf->Image('@'.$data);             
             $data = base64_decode($scoreImg);
-            $html = '<img src="data:image/jpeg;base64,' . $scoreImg . '"  width="50" height="50">';
+            $pdf->Image('@'.$data, 50, 100, 120, 120);             
+            $html = '<h1 style="text-align: center">興趣測驗分析報告</h1>
+            <p>美國約翰‧霍普金斯大學心理學教授John Holland，於1959年開始陸續提出職業興趣理論及其延伸，將人格與職業興趣結合，分為六種類型。 受測者主要利用問卷調查來瞭解自己的性向，並根據分數而計算出個人對六種特質的偏好。</p>
+            <p>本測驗係以上述的生涯理論為基礎所發展而成的。他認為職業選擇是個人基於過去經驗的累積，加上人格特質的影響而做的抉擇，故同一職業會吸引有相同經驗與相似人格特質的人，職業上的適應與滿足也決定於人格和工作環境的適配度。以下為Holland所提的一些理論假設：</p>
+            <ol>
+                <li>人的個性與工作環境皆可區分為六種類型：企業型（E）、研究型（I）、事務型（C）、社會型（S）、實用型（R）、藝術型（A）。</li>
+                <li>找到與自己類型一致的環境，會生活得較為滿意，學業、工作起來會更容易感受到勝任愉快</li>
+            </ol>
+            <img src="data:image/jpeg;base64,' . $scoreImg . '"  width="50" height="50">';
             $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
         }
         foreach ($_POST['course-select'] as $k => $selectedCourse) {
@@ -542,6 +567,7 @@ class StudentController extends Controller
         $pdf->Output('portfolio.pdf', 'I');
     }
 
+    // TODO: New style
     public function hw($id = null) {
         if(isset($_SESSION['isLogin'])) {
             $courseBought = (new CourseBoughtModel)->where(['id = :id'], [':id' => $id])->fetch();
