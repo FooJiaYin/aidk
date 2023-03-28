@@ -1,3 +1,4 @@
+<?= $msg ?>
 <div class="pad30" id="form">
 
     <div class="titleJL textC marT0 marB0">
@@ -8,19 +9,19 @@
         <form id="course_form" action="." method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label>課程名稱</label>
-                <input type="text" class="form-control" name="name" required="">
+                <input type="text" class="form-control" name="name">
             </div>
             <div class="form-group">
                 <label>課程說明</label>
-                <textarea class="form-control" name="description" rows="3" required=""></textarea>
+                <textarea class="form-control" name="description" rows="3"></textarea>
             </div>
             <div class="form-group">
                 <label>課程售價</label>
-                <input type="number" name="price" min="1" max="30000" class="form-control" required="">
+                <input type="number" name="price" min="1" max="30000" class="form-control" >
             </div>
             <div class="form-group">
                 <label>開課老師</label>
-                <select class="form-control" name="teacher" required="">
+                <select class="form-control" name="teacher">
                     <option value="">請選擇</option>
                     <?php foreach ($teachers as $teacher) : ?>
                         <option value="<?= $teacher['id'] ?>"><?= $teacher['name'] ?></option>
@@ -45,7 +46,7 @@
                 <div class="mt-1">
                     <div class="input-group">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="img[]" accept="image/jpeg" required="">
+                            <input type="file" class="custom-file-input" name="img[]" accept="image/jpeg">
                             <label class="custom-file-label" data-browse="瀏覽">選擇圖片...</label>
                         </div>
                         <div class="input-group-append">
@@ -76,7 +77,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">章節名稱</span>
                             </div>
-                            <input type="text" name="chapter_name[]" class="form-control" required="">
+                            <input type="text" name="chapter_name[]" class="form-control" >
                             <div class="input-group-append">
                                 <button class="rm-chapter btn btn-outline-danger" type="button">移除這個章節</button>
                             </div>
@@ -90,7 +91,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">小節名稱</span>
                                     </div>
-                                    <input type="text" name="sect_name[]" class="form-control" required="">
+                                    <input type="text" name="sect_name[]" class="form-control" >
                                     <div class="input-group-append">
                                         <button class="rm-sect btn btn-outline-danger" type="button">移除這個小節</button>
                                     </div>
@@ -100,7 +101,7 @@
                                         <span class="input-group-text">小節影片</span>
                                     </div>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" name="sect_video[]" accept="video/mp4" required="">
+                                        <input type="file" class="custom-file-input" name="sect_video[]" accept="video/mp4">
                                         <label class="custom-file-label" data-browse="瀏覽">選擇影片...</label>
                                     </div>
                                 </div>

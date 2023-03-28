@@ -131,7 +131,7 @@
             // console.log($(this).attr('value'));
             course['category'] += $(this).attr('value') + ", ";
         });
-        course['category'] = course['category'].slice(0, -2);
+        if(course['category'] != "[") course['category'] = course['category'].slice(0, -2);
         course['category'] += "]";
         // course['category'] = [];
         // $('input[name = "category[]"]:checked').each(function() {
@@ -179,8 +179,8 @@
                 if (!response.ok) {
                     throw new Error(response.statusText);
                 }
-
-                return response.json();
+                console.log(response);
+                // return response.json();
             }).then((result) => {
                 if (result.result)
                     window.location.replace("/admin/courses/");;
